@@ -1,0 +1,20 @@
+{
+  "name": "solidity-diagram-gen",
+  "version": "0.1.0",
+  "description": "Solidity Class Diagram Generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+"bin": {
+      "solidity-diagram-gen": "./bin/execute.js"
+    },
+    "preferGlobal": true,
+  "author": "Richard Ramos <info@richardramos.me>",
+  "license": "MIT",
+  "dependencies": {
+    "klaw": "^2.1.1",
+    "solidity-parser": "^0.4.0",
+    "viz.js": "^1.8.1"
+  }
+}
