@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var command = require('../command.js');
+var command = require('../src/solidity-diagram-gen.js');
 
 
 let arguments = process.argv.slice(2);
