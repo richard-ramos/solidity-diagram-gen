@@ -15,6 +15,8 @@ const processSolFiles = (fileArray) => {
     contractString = "";
     relationshipString = "";
     structString = "";
+    compositionString = "";
+    associationString = "";
 
     fileArray.forEach(function(f){
         let parseResult = SolidityParser.parseFile(f);
@@ -23,11 +25,11 @@ const processSolFiles = (fileArray) => {
                 if(c.type == "ContractStatement" || c.type =="InterfaceStatement"){
                     addContract(c);
                 }
-            });
+            });  
         }
-        
     });
 
+    analyzeComposition(contracts, structures);
 
     contracts.forEach(function(c){
         let contractLabel = "";
@@ -44,11 +46,15 @@ const processSolFiles = (fileArray) => {
                 contractLabel += a + '\\l';
             })
             
-        } else {
-            contractLabel += "|..."
-        }
+        } 
 
-        contractLabel += "|TODO: parse methods";
+        if(c.methods.length > 0){
+            contractLabel += "|";
+            c.methods.forEach(function(a){
+                contractLabel += a + '\\l';
+            })
+            
+        } 
 
         contractString += `${c.id}[label = "{${contractLabel}}"]`
         contractString += "\n";
@@ -58,6 +64,20 @@ const processSolFiles = (fileArray) => {
                 relationshipString += `${idMapping[i]}->${c.id}`
                 relationshipString += "\n";
             });
+        }
+
+        if(c.compositions.length > 0){
+            c.compositions.forEach(function(i){
+                compositionString += `${c.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
+                compositionString += "\n";
+            })
+        }
+
+        if(c.associations.length > 0){
+            c.associations.forEach(function(i){
+                associationString += `${idMapping[i]}->${c.id}[constraint=true, arrowtail=open]`
+                associationString += "\n";
+            })
         }
     });
 
@@ -70,7 +90,6 @@ const processSolFiles = (fileArray) => {
             s.attributes.forEach(function(a){
                 label += a + '\\l';
             })
-            label += "|...";
         }
 
         structString += `${s.id}[fillcolor = "#cfcfcf", label = "{${label}}"]`
@@ -78,6 +97,21 @@ const processSolFiles = (fileArray) => {
 
         relationshipString += `${s.parentContractId}->${s.id}[constraint=true, arrowtail=diamond]`
         relationshipString += "\n";
+
+
+        if(s.compositions.length > 0){
+            s.compositions.forEach(function(i){
+                compositionString += `${s.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
+                compositionString += "\n";
+            })
+        }
+
+        if(s.associations.length > 0){
+            s.associations.forEach(function(i){
+                associationString += `${idMapping[i]}->${s.id}[constraint=true, arrowtail=open]`
+                associationString += "\n";
+            })
+        }
     });
 
     
@@ -95,6 +129,10 @@ ${structString}
 
 ${relationshipString}
 
+${compositionString}
+
+${associationString}
+
 }`;
 
     let svg = Viz(dot);
@@ -109,8 +147,77 @@ ${relationshipString}
     }); 
 }
 
+const getMethod = function(obj, b){
+    let mtString = "";
 
-const getAttribute = function(b){
+    if(b.type == "FunctionDeclaration"){
+
+        let hasReturnValue = true;
+
+        if(b.name == obj.name){
+            mtString += "«constructor» ";
+            hasReturnValue = false;
+        }
+
+        let visibility = "public";
+        
+        if(b.modifiers != undefined && b.modifiers.length > 0){
+            visibility = b.modifiers.find(x => ["public", "private", "internal", "external"].includes(x.name));
+            
+            if(visibility != null) 
+                visibility = visibility.name;
+        }
+
+        switch(visibility){
+            case 'internal':
+                mtString += "# "
+                break;
+            case 'private':
+                mtString += "- ";
+                break;
+            case null:
+            case undefined:
+            case 'public':
+            case 'external':
+                mtString += "+ ";
+                break;
+        }
+
+        // TODO
+        let parameters = "";
+        let returnValues = "()";
+        
+        mtString += b.name + "(" + parameters + ")" + (hasReturnValue ? " : " + returnValues : "");
+
+
+    }
+
+    if(b.type == "EventDeclaration"){
+        mtString += "«event» " + b.name;
+    }
+
+    if(b.type == "ModifierDeclaration"){
+        mtString += "«modifier» " + b.name;
+    }
+
+    /*if(typeof b.literal.literal === 'string'){
+        attString += b.literal.literal;
+        obj.compositions.push(b.literal.literal);
+    } else {
+        if(b.literal.literal.type == 'MappingExpression'){
+            attString += "mapping";
+            // TODO extract mapping variables
+        } else {
+            // TODO what's this?
+            console.log(b);
+        }
+        
+    }*/
+
+    obj.methods.push(mtString);
+}
+
+const getAttribute = function(obj, b){
     let attString = "";
 
     switch(b.visibility){
@@ -130,6 +237,7 @@ const getAttribute = function(b){
 
     if(typeof b.literal.literal === 'string'){
         attString += b.literal.literal;
+        obj.compositions.push(b.literal.literal);
     } else {
         if(b.literal.literal.type == 'MappingExpression'){
             attString += "mapping";
@@ -141,25 +249,16 @@ const getAttribute = function(b){
         
     }
 
-    return attString;
+    obj.attributes.push(attString);
 }
-
-
-
 
 
 
 const addContract = function(c){
     let isArr = [];
-    let attArr = [];
+    
 
-    if(c.body && c.body.length > 0)
-        c.body.forEach(function(b){
-            if(b.type == "StateVariableDeclaration"){
-                attArr.push(getAttribute(b));
-            }
-        });
-
+    
     if(c.is != undefined && c.is.length > 0){
         c.is.forEach(function(i){
             isArr.push(i.name);
@@ -171,9 +270,31 @@ const addContract = function(c){
         name: c.name,
         isInterface: c.type =="InterfaceStatement",
         is: isArr,
-        attributes: attArr,
-        structs: []
+        attributes: [],
+        methods: [],
+        compositions: [],
+        associations: [],
     };
+
+    if(c.body && c.body.length > 0){
+        let attArr = [];
+
+        c.body.forEach(function(b){
+
+          
+
+            switch(b.type){
+                case "StateVariableDeclaration": 
+                    getAttribute(contractObj, b);
+                    break;
+                case "ModifierDeclaration":
+                case "EventDeclaration":
+                case "FunctionDeclaration":
+                    getMethod(contractObj, b);
+                    break;
+            }
+        });
+    }
 
     idMapping[c.name] = contractObj.id;
 
@@ -186,17 +307,8 @@ const addContract = function(c){
     contracts.push(contractObj);
 }
 
-
 const addStructure = function(c, parentContract){
     let isArr = [];
-    let attArr = [];
-
-    if(c.body && c.body.length > 0)
-        c.body.forEach(function(b){
-            if(b.type == "DeclarativeExpression"){
-                attArr.push(getAttribute(b));
-            }
-        });
 
     if(c.is != undefined && c.is.length > 0){
         c.is.forEach(function(i){
@@ -207,9 +319,18 @@ const addStructure = function(c, parentContract){
     structObj = {
         id: ++idCnt,
         name: c.name,
-        attributes: attArr,
-        parentContractId: parentContract.id
+        attributes: [],
+        parentContractId: parentContract.id,
+        compositions: [],
+        associations: []
     };
+
+    if(c.body && c.body.length > 0)
+        c.body.forEach(function(b){
+            if(b.type == "DeclarativeExpression"){
+                getAttribute(structObj, b);
+            }
+        });
 
     idMapping[c.name] = structObj.id;
 
@@ -217,29 +338,67 @@ const addStructure = function(c, parentContract){
 }
 
 
+const analyzeComposition = function(contracts, structs){
+    let func = function(c){
+        let currentComposition = c.compositions.filter(function(item, pos, self) {
+            return self.indexOf(item) == pos;
+        });
 
-
-
-
-
-Object.defineProperty(Date.prototype, 'YYYYMMDDHHMMSS', {
-    value: function() {
-        function pad2(n) {  // always returns a string
-            return (n < 10 ? '0' : '') + n;
+        currentComposition.forEach(function(comp){
+            if(!(comp in idMapping)){
+                c.compositions = c.compositions.filter(item => item !== comp);
+            }
+        })
+    };
+    
+    contracts.forEach(func);
+    structs.forEach(func);
+    
+    let compFunction = function(c){
+        let currentComposition = c.compositions;
+        for(let i = 0; i < currentComposition.length; i++){
+            if(structs.filter(x => x.name == currentComposition[i]).length > 0){
+                // Structs cannot exist without their contract
+                c.compositions = c.compositions.filter(item => item !== currentComposition[i]);
+            }
         }
-
-        return this.getFullYear() +
-               pad2(this.getMonth() + 1) + 
-               pad2(this.getDate()) +
-               pad2(this.getHours()) +
-               pad2(this.getMinutes()) +
-               pad2(this.getSeconds());
     }
-});
+
+    contracts.forEach(compFunction);
+
+    // Structs are associated between them
+    structs.forEach(function(c){
+        let currentComposition = c.compositions;
+        for(let i = 0; i < currentComposition.length; i++){
+            if(structs.filter(x => x.name == currentComposition[i]).length > 0){
+                c.associations.push(currentComposition[i]);
+                c.compositions = c.compositions.filter(item => item !== currentComposition[i]);
+            }
+        }
+    })
+  
+    assocFunc = function(c){
+        let currentComposition = c.compositions;
+        for(let i = 0; i < currentComposition.length; i++){
+            if(contracts.filter(x => x.name == currentComposition[i]).length > 0){
+                c.compositions = c.compositions.filter(item => item !== currentComposition[i]);
+                c.associations.push(currentComposition[i]);
+            }
+        }
+    };
+
+    contracts.forEach(assocFunc);
+    structs.forEach(assocFunc);
+
+}
+
+
 
 
 
 const generateDiagram = function(filepath){
+    console.log("Generating diagram...");
+    
     try {
         if(fs.lstatSync(filepath).isDirectory()){
             const items = [];
