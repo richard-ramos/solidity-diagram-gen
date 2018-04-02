@@ -154,11 +154,7 @@ const getMethod = function(obj, b){
 
         let hasReturnValue = true;
 
-        if(b.name == obj.name){
-            mtString += "«constructor» ";
-            hasReturnValue = false;
-        }
-
+        
         let visibility = "public";
         
         if(b.modifiers != undefined && b.modifiers.length > 0){
@@ -183,36 +179,52 @@ const getMethod = function(obj, b){
                 break;
         }
 
-        // TODO
-        let parameters = "";
-        let returnValues = "()";
-        
-        mtString += b.name + "(" + parameters + ")" + (hasReturnValue ? " : " + returnValues : "");
-
-
-    }
-
-    if(b.type == "EventDeclaration"){
-        mtString += "«event» " + b.name;
-    }
-
-    if(b.type == "ModifierDeclaration"){
-        mtString += "«modifier» " + b.name;
-    }
-
-    /*if(typeof b.literal.literal === 'string'){
-        attString += b.literal.literal;
-        obj.compositions.push(b.literal.literal);
-    } else {
-        if(b.literal.literal.type == 'MappingExpression'){
-            attString += "mapping";
-            // TODO extract mapping variables
-        } else {
-            // TODO what's this?
-            console.log(b);
+        if(b.name == obj.name){
+            mtString += "«constructor» ";
+            hasReturnValue = false;
         }
         
-    }*/
+        // TODO
+        let parameters = "";
+        if(b.params != null){
+            let p = [];
+            for(let i = 0; i < b.params.length; i++){
+                p.push(b.params[i].literal.literal + ' ' + b.params[i].id);
+            }
+            parameters = p.join(', ');
+        } 
+
+        let returnValues = "";
+        if(b.returnParams != null){
+            let p = [];
+            for(let i = 0; i < b.returnParams.length; i++){
+                p.push(b.returnParams[i].literal.literal + (b.returnParams[i].id != null ? " " + b.returnParams[i].id : ""));
+            }
+            returnValues = p.join(', ');
+        } else {
+            hasReturnValue = false;
+        }
+
+
+        let name = b.name ;
+        if(name == null)
+            name = "«fallback»";
+
+        mtString += name + "(" + parameters + ")" + (hasReturnValue ? " : (" + returnValues + ")" : "");
+    }
+
+    if(b.type == "EventDeclaration" || b.type == "ModifierDeclaration"){
+        let parameters = "";
+        if(b.params != null){
+            let p = [];
+            for(let i = 0; i < b.params.length; i++){
+                p.push(b.params[i].literal.literal + ' ' + b.params[i].id);
+            }
+            parameters = p.join(', ');
+        } 
+
+        mtString += (b.type == "EventDeclaration" ? "«event» " : "«modifier» ") + b.name + "(" + parameters + ")";
+    }
 
     obj.methods.push(mtString);
 }
@@ -257,8 +269,6 @@ const getAttribute = function(obj, b){
 const addContract = function(c){
     let isArr = [];
     
-
-    
     if(c.is != undefined && c.is.length > 0){
         c.is.forEach(function(i){
             isArr.push(i.name);
@@ -268,7 +278,7 @@ const addContract = function(c){
     contractObj = {
         id: ++idCnt,
         name: c.name,
-        isInterface: c.type =="InterfaceStatement",
+        isInterface: c.type == "InterfaceStatement",
         is: isArr,
         attributes: [],
         methods: [],
@@ -277,12 +287,7 @@ const addContract = function(c){
     };
 
     if(c.body && c.body.length > 0){
-        let attArr = [];
-
         c.body.forEach(function(b){
-
-          
-
             switch(b.type){
                 case "StateVariableDeclaration": 
                     getAttribute(contractObj, b);
@@ -308,14 +313,6 @@ const addContract = function(c){
 }
 
 const addStructure = function(c, parentContract){
-    let isArr = [];
-
-    if(c.is != undefined && c.is.length > 0){
-        c.is.forEach(function(i){
-            isArr.push(i.name);
-        })
-    }
-
     structObj = {
         id: ++idCnt,
         name: c.name,
