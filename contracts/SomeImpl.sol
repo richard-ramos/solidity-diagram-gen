@@ -26,6 +26,12 @@ contract SomeImpl is SomeInterface {
         bool valid;
         uint256 count;
         mapping (address => string) names;
+        mapping (address => AnotherStruct) balances;
+    }
+
+    struct AnotherStruct {
+        bool active;
+        uint256 balance;
     }
 
     event Add(uint256 beforeValue, uint256 afterValue);

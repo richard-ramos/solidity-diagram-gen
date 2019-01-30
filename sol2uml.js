@@ -1,7 +1,6 @@
 #! /usr/bin/env node
 
 const program = require('commander')
-const generateDiagram = require('./src/generator').generateDiagram
 
 program
   .usage('[options] <file or root folder>\n\nGenerates UML diagrams from Solidity source code')
@@ -10,8 +9,11 @@ program
   .parse(process.argv)
 
 if (program.verbose) {
-  process.env.DEBUG = 'solidity-diagram-gen'
+  process.env.DEBUG = 'sol2uml'
 }
+
+// This function needs to be loaded after the DEBUG env variable has been set
+const generateDiagram = require('./src/generator').generateDiagram
 
 if(program.args.length === 0) {
 

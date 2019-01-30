@@ -5,7 +5,7 @@ const SolidityParser = require("solidity-parser-antlr")
 const Viz = require('viz.js')
 const svg_to_png = require('svg-to-png')
 const VError = require('verror')
-const debug = require('debug')('solidity-diagram-gen')
+const debug = require('debug')('sol2uml')
 
 let contracts = []
 let importedContracts = []
@@ -201,7 +201,7 @@ function outputDiagram(dot, output = 'both') {
     }
 }
 
-function addOperation(contract, node){
+function addOperation(umlClass, node){
     let mtString = ""
     let isAbstract = false
 
@@ -257,7 +257,7 @@ function addOperation(contract, node){
         mtString += (node.type === "EventDefinition" ? "«event» " : "«modifier» ") + node.name + "(" + formatParameters(node.parameters) + ")"
     }
 
-    contract.operations.push(mtString)
+    umlClass.operations.push(mtString)
 
     return isAbstract
 }
@@ -309,7 +309,7 @@ function formatType(typeName) {
     throw Error(`Could not format type ${typeName.type}`)
 }
 
-function addAttribute(contract, variable){
+function addAttribute(umlClass, variable){
     let attString = ""
 
     switch(variable.visibility){
@@ -327,24 +327,25 @@ function addAttribute(contract, variable){
     }
 
     try {
-        attString += variable.name + " : " + formatType(variable.typeName, contract.name)
+        attString += variable.name + " : " + formatType(variable.typeName, umlClass.name)
     }
     catch (err) {
-        throw VError(err, `Could not format attribute ${contract.name}.${variable.name}`)
+        throw VError(err, `Could not format attribute ${umlClass.name}.${variable.name}`)
     }
 
     // add to contract compositions
     if (variable.typeName.type === 'UserDefinedTypeName') {
-        addComposition(contract, variable.typeName.namePath)
+        addAssociation(umlClass, variable.typeName.namePath)
     }
 
-    contract.attributes.push(attString)
+    umlClass.attributes.push(attString)
 }
 
-// only adds a class to the composition if its not already in the list
-function addComposition(contract, className) {
-    // if already in the composition list
-    contract.compositions.push(className)
+// only adds a class to the associations if its not already in the list
+function addAssociation(umlClass, targetClassName) {
+    // if already in the associations list
+    // TODO change to associations
+    umlClass.compositions.push(targetClassName)
 }
 
 // function getDependencies(body) {
@@ -365,41 +366,43 @@ function addContract(node){
 
     const baseContractNames = node.baseContracts.map(c => c.baseName.namePath)
 
-    const contract = {
+    const umlClass = {
         id: ++idCnt,
         name: node.name,
         isInterface: node.kind === "interface",
         isLibrary: node.kind === "library",
         isAbstract: false,
-        is: baseContractNames,
         attributes: [],
         operations: [],
-        compositions: [],
-        associations: [],
+        // relationships
+        is: baseContractNames,  // generalisation
+        compositions: [],       // to be removed
+        associations: [],       // storage variable
+        dependencies: [],       // memory variables
     }
 
     node.subNodes.forEach(function(subNode){
         switch(subNode.type){
             case "StateVariableDeclaration":
                 subNode.variables.forEach(variable => {
-                    addAttribute(contract, variable)
+                    addAttribute(umlClass, variable)
                 })
                 break
             case "StructDefinition":
-                addStructure(subNode, contract)
+                addStructure(umlClass, subNode)
                 break
             case "ModifierDefinition":
             case "EventDefinition":
             case "FunctionDefinition":
                 // get contract method and check that it's not abstract
-                const isMethodAbstract = addOperation(contract, subNode)
+                const isMethodAbstract = addOperation(umlClass, subNode)
 
                 // mark contract as abstract if function not implemented
                 // and contract is not already abstract and not an interface
                 if (isMethodAbstract &&
-                  contract.isAbstract === false &&
-                  !contract.isInterface) {
-                    contract.isAbstract = true
+                  umlClass.isAbstract === false &&
+                  !umlClass.isInterface) {
+                    umlClass.isAbstract = true
                 }
 
                 if (subNode.body != null) {
@@ -409,22 +412,22 @@ function addContract(node){
                 break
             case "UsingForDeclaration":
                 // register composition relationship
-                contract.compositions.push(subNode.libraryName)
+                umlClass.compositions.push(subNode.libraryName)
                 break
         }
     })
 
-    idMapping[node.name] = contract.id
+    idMapping[node.name] = umlClass.id
 
-    contracts.push(contract)
+    contracts.push(umlClass)
 }
 
-function addStructure(node, parentContract){
-    structObj = {
+function addStructure(parentUmlClass, node){
+    const umlClass = {
         id: ++idCnt,
         name: node.name,
         attributes: [],
-        parentContractId: parentContract.id,
+        parentContractId: parentUmlClass.id,
         compositions: [],
         associations: []
     }
@@ -432,13 +435,15 @@ function addStructure(node, parentContract){
     // add the Struct attributes
     node.members.forEach(member => {
         if(member.type === "VariableDeclaration"){
-            addAttribute(structObj, member)
+            addAttribute(umlClass, member)
         }
+
+        // TODO add associations with other stucts, interface or contracts
     })
 
-    idMapping[node.name] = structObj.id
+    idMapping[node.name] = umlClass.id
 
-    structures.push(structObj)
+    structures.push(umlClass)
 }
 
 function analyzeComposition(contracts, structs){
