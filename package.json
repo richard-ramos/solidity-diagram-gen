@@ -2,9 +2,9 @@
   "name": "solidity-diagram-gen",
   "version": "0.2.0",
   "description": "Solidity Class Diagram Generator",
-  "main": "./bin/execute.js",
+  "main": "sol2uml.js",
   "scripts": {
-    "sdg": "./bin/execute.js"
+    "sol2uml": "node ./sol2uml.js"
   },
   "bin": {
     "solidity-diagram-gen": "./bin/execute.js"
@@ -16,6 +16,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.19.0",
     "debug": "^4.1.1",
     "klaw": "^2.1.1",
     "openzeppelin-solidity": "^2.1.2",

@@ -23,7 +23,10 @@ const processSolFiles = (fileArray, output) => {
             if(parseResult.type === "SourceUnit"){
 
                 parseResult.children.forEach(contract => {
-                    if(contract.type === "ContractDefinition"){
+                    if(contract.type === "ContractDefinition") {
+
+                        debug(`Adding contract ${contract.name}`)
+
                         addContract(contract)
                     }
                     else if (contract.type === "ImportDirective") {
@@ -135,7 +138,7 @@ function constructDot() {
         }
     })
 
-    return `
+    const dot = `
     digraph hierarchy {
         node[shape=record,style=filled,fillcolor=gray95]
         edge[dir=back, arrowtail=empty]
@@ -151,36 +154,43 @@ function constructDot() {
     ${associationString}
     
     }`
+
+    debug(dot)
+
+    return dot
 }
 
 function outputDiagram(dot, output = 'both') {
+
+    debug(`Generating output file(s) for option: ${output}`)
 
     const svg = Viz(dot)
     const diagramName = 'diagram' /*+ "-" + (new Date()).YYYYMMDDHHMMSS()*/
     const svgFilename = diagramName + ".svg"
     const pngFilename = diagramName + ".png"
 
-    try {
-        fs.writeFile(svgFilename, svg, function (err) {
-            if (err) {
-                return console.log(err)
-            } else {
-                console.log("Diagram generated: " + svgFilename)
-            }
-        })
-    }
-    catch (err) {
-        throw VError(err, `Failed to write to SVG file ${svgFilename}`)
-    }
+    debug(`Writing SVG diagram to ${svgFilename}`)
+
+    fs.writeFile(svgFilename, svg, function (err) {
+        if (err) {
+            throw VError(err, `Failed to write SVG file to ${svgFilename}`)
+        } else {
+            console.log(`SVG diagram generated: ${svgFilename}`)
+        }
+    })
 
     if (output === 'both' || output === 'png') {
-        try {
-            const svgInput = path.resolve(path.join( process.cwd(), svgFilename ))
-            svg_to_png.convert([svgInput], process.cwd())
-        }
-        catch (err) {
-            throw VError(err, `Failed to convert SVG file ${svgImput} to PNG`)
-        }
+
+        debug(`Converting svg diagram ${svgFilename} to png diagram ${pngFilename}`)
+
+        const svgInput = path.resolve(path.join( process.cwd(), svgFilename ))
+        svg_to_png.convert([svgInput], process.cwd())
+          .then(() => {
+              console.log(`PNG diagram generated: ${pngFilename}`)
+          })
+          .catch(() => {
+              throw VError(err, `Failed to convert SVG diagram ${svgImput} to PNG diagram ${pngFilename}`)
+          })
     }
     else {
         // TODO delete the svg file
@@ -453,7 +463,7 @@ const analyzeComposition = function(contracts, structs){
 }
 
 
-const generateDiagram = function(filepath){
+const generateDiagram = function(filepath, output){
 
     debug(`Generating diagram for Solidity files under ${filepath}`)
 
@@ -468,12 +478,12 @@ const generateDiagram = function(filepath){
                   if (path.extname(file.path) === '.sol')
                       files.push(file.path)
               })
-              .on('end', () => processSolFiles(files))
+              .on('end', () => processSolFiles(files, output) )
         }
         else if (fileOrDir.isFile() ) {
 
             if (path.extname(filepath) === '.sol') {
-                processSolFiles([filepath])
+                processSolFiles([filepath], output)
             }
             else {
                 console.error(`Error: File ${filepath} does not have a .sol extension.`)

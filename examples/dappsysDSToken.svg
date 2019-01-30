@@ -58,10 +58,11 @@
 <!-- 2 -->
 <g id="node2" class="node">
 <title>2</title>
-<polygon fill="#f2f2f2" stroke="#000000" points="752.2679,-931.1 752.2679,-980.7 1070.8457,-980.7 1070.8457,-931.1 752.2679,-931.1"/>
-<text text-anchor="middle" x="911.5568" y="-964.1" font-family="Times,serif" font-size="14.00" fill="#000000">DSAuthority</text>
-<polyline fill="none" stroke="#000000" points="752.2679,-955.9 1070.8457,-955.9 "/>
-<text text-anchor="start" x="760.2679" y="-939.3" font-family="Times,serif" font-size="14.00" fill="#000000">+ canCall(address src, address dst, bytes4 sig) : (bool)</text>
+<polygon fill="#f2f2f2" stroke="#000000" points="752.2679,-922.7 752.2679,-989.1 1070.8457,-989.1 1070.8457,-922.7 752.2679,-922.7"/>
+<text text-anchor="middle" x="911.5568" y="-972.5" font-family="Times,serif" font-size="14.00" fill="#000000">«abstract»</text>
+<text text-anchor="middle" x="911.5568" y="-955.7" font-family="Times,serif" font-size="14.00" fill="#000000">DSAuthority</text>
+<polyline fill="none" stroke="#000000" points="752.2679,-947.5 1070.8457,-947.5 "/>
+<text text-anchor="start" x="760.2679" y="-930.9" font-family="Times,serif" font-size="14.00" fill="#000000">+ canCall(address src, address dst, bytes4 sig) : (bool)</text>
 </g>
 <!-- 4 -->
 <g id="node4" class="node">
@@ -81,8 +82,8 @@
 <!-- 2&#45;&gt;4 -->
 <g id="edge9" class="edge">
 <title>2&#45;&gt;4</title>
-<path fill="none" stroke="#000000" d="M881.5442,-923.1847C857.9627,-897.4797 824.1048,-860.5728 793.5183,-827.2318"/>
-<polygon fill="#000000" stroke="#000000" points="888.5177,-930.7862 878.4416,-926.4594 885.1377,-927.1018 881.7576,-923.4173 881.7576,-923.4173 881.7576,-923.4173 885.1377,-927.1018 885.0736,-920.3752 888.5177,-930.7862 888.5177,-930.7862"/>
+<path fill="none" stroke="#000000" d="M873.9727,-914.9314C850.9699,-889.8571 820.7637,-856.9307 793.2424,-826.9311"/>
+<polygon fill="#000000" stroke="#000000" points="880.8693,-922.4491 870.7932,-918.1222 877.4893,-918.7646 874.1092,-915.0801 874.1092,-915.0801 874.1092,-915.0801 877.4893,-918.7646 877.4252,-912.0381 880.8693,-922.4491 880.8693,-922.4491"/>
 </g>
 <!-- 3 -->
 <g id="node3" class="node">
@@ -175,27 +176,28 @@
 <!-- 8 -->
 <g id="node8" class="node">
 <title>8</title>
-<polygon fill="#f2f2f2" stroke="#000000" points="0,-680.9 0,-814.5 341.1136,-814.5 341.1136,-680.9 0,-680.9"/>
-<text text-anchor="middle" x="170.5568" y="-797.9" font-family="Times,serif" font-size="14.00" fill="#000000">ERC20</text>
-<polyline fill="none" stroke="#000000" points="0,-789.7 341.1136,-789.7 "/>
-<text text-anchor="start" x="8" y="-773.1" font-family="Times,serif" font-size="14.00" fill="#000000">+ totalSupply() : (uint)</text>
-<text text-anchor="start" x="8" y="-756.3" font-family="Times,serif" font-size="14.00" fill="#000000">+ balanceOf(address guy) : (uint)</text>
-<text text-anchor="start" x="8" y="-739.5" font-family="Times,serif" font-size="14.00" fill="#000000">+ allowance(address src, address guy) : (uint)</text>
-<text text-anchor="start" x="8" y="-722.7" font-family="Times,serif" font-size="14.00" fill="#000000">+ approve(address guy, uint wad) : (bool)</text>
-<text text-anchor="start" x="8" y="-705.9" font-family="Times,serif" font-size="14.00" fill="#000000">+ transfer(address dst, uint wad) : (bool)</text>
-<text text-anchor="start" x="8" y="-689.1" font-family="Times,serif" font-size="14.00" fill="#000000">+ transferFrom(address src, address dst, uint wad) : (bool)</text>
+<polygon fill="#f2f2f2" stroke="#000000" points="0,-672.5 0,-822.9 341.1136,-822.9 341.1136,-672.5 0,-672.5"/>
+<text text-anchor="middle" x="170.5568" y="-806.3" font-family="Times,serif" font-size="14.00" fill="#000000">«abstract»</text>
+<text text-anchor="middle" x="170.5568" y="-789.5" font-family="Times,serif" font-size="14.00" fill="#000000">ERC20</text>
+<polyline fill="none" stroke="#000000" points="0,-781.3 341.1136,-781.3 "/>
+<text text-anchor="start" x="8" y="-764.7" font-family="Times,serif" font-size="14.00" fill="#000000">+ totalSupply() : (uint)</text>
+<text text-anchor="start" x="8" y="-747.9" font-family="Times,serif" font-size="14.00" fill="#000000">+ balanceOf(address guy) : (uint)</text>
+<text text-anchor="start" x="8" y="-731.1" font-family="Times,serif" font-size="14.00" fill="#000000">+ allowance(address src, address guy) : (uint)</text>
+<text text-anchor="start" x="8" y="-714.3" font-family="Times,serif" font-size="14.00" fill="#000000">+ approve(address guy, uint wad) : (bool)</text>
+<text text-anchor="start" x="8" y="-697.5" font-family="Times,serif" font-size="14.00" fill="#000000">+ transfer(address dst, uint wad) : (bool)</text>
+<text text-anchor="start" x="8" y="-680.7" font-family="Times,serif" font-size="14.00" fill="#000000">+ transferFrom(address src, address dst, uint wad) : (bool)</text>
 </g>
 <!-- 7&#45;&gt;8 -->
 <g id="edge4" class="edge">
 <title>7&#45;&gt;8</title>
-<path fill="none" stroke="#000000" d="M170.5568,-912.1029C170.5568,-883.8759 170.5568,-846.6206 170.5568,-814.7128"/>
+<path fill="none" stroke="#000000" d="M170.5568,-912.2286C170.5568,-886.3845 170.5568,-852.9395 170.5568,-822.9592"/>
 <polygon fill="none" stroke="#000000" points="167.0569,-912.449 170.5568,-922.4491 174.0569,-912.4491 167.0569,-912.449"/>
 </g>
 <!-- 8&#45;&gt;9 -->
 <g id="edge5" class="edge">
 <title>8&#45;&gt;9</title>
-<path fill="none" stroke="#000000" d="M244.1463,-673.4729C274.7085,-642.6459 310.72,-606.3224 343.8828,-572.8722"/>
-<polygon fill="none" stroke="#000000" points="241.4602,-671.211 236.9052,-680.7767 246.4313,-676.1394 241.4602,-671.211"/>
+<path fill="none" stroke="#000000" d="M252.3613,-665.1867C281.0654,-636.2339 313.6964,-603.3202 343.951,-572.8035"/>
+<polygon fill="none" stroke="#000000" points="249.7071,-662.8927 245.1521,-672.4584 254.6782,-667.821 249.7071,-662.8927"/>
 </g>
 <!-- 9&#45;&gt;10 -->
 <g id="edge7" class="edge">
