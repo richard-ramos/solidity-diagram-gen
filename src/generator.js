@@ -7,7 +7,7 @@ const svg_to_png = require('svg-to-png')
 const VError = require('verror')
 const debug = require('debug')('sol2uml')
 
-let contracts = []
+let umlClasses = []
 let importedContracts = []
 let structures = []
 let idMapping = {}
@@ -27,7 +27,7 @@ const processSolFiles = (fileArray, output) => {
 
                         debug(`Adding contract ${contract.name}`)
 
-                        addContract(contract)
+                        addUmlClass(contract)
                     }
                     else if (contract.type === "ImportDirective") {
                         importedContracts.push(contract)
@@ -39,7 +39,7 @@ const processSolFiles = (fileArray, output) => {
         }
     })
 
-    analyzeComposition(contracts, structures)
+    analyzeComposition(umlClasses, structures)
 
     const dot = constructDot()
 
@@ -53,59 +53,59 @@ function constructDot() {
     let compositionString = ""
     let associationString = ""
 
-    contracts.forEach(function (contract) {
-        let contractLabel = ""
+    umlClasses.forEach(function (umlClass) {
+        let classLabel = ""
 
-        if (contract.isInterface) {
-            contractLabel += "«Interface»\\n"
+        if (umlClass.isInterface) {
+            classLabel += "«Interface»\\n"
         }
 
-        if (contract.isLibrary) {
-            contractLabel += "«Library»\\n"
+        if (umlClass.isLibrary) {
+            classLabel += "«Library»\\n"
         }
 
-        if (contract.isAbstract) {
-            contractLabel += "«Abstract»\\n"
+        if (umlClass.isAbstract) {
+            classLabel += "«Abstract»\\n"
         }
 
-        contractLabel += `${contract.name}`
+        classLabel += `${umlClass.name}`
 
-        if (contract.attributes.length > 0) {
-            contractLabel += "|"
-            contract.attributes.forEach(function (a) {
-                contractLabel += a + '\\l'
+        if (umlClass.attributes.length > 0) {
+            classLabel += "|"
+            umlClass.attributes.forEach(function (a) {
+                classLabel += a + '\\l'
             })
 
         }
 
-        if (contract.operations.length > 0) {
-            contractLabel += "|"
-            contract.operations.forEach(function (a) {
-                contractLabel += a + '\\l'
+        if (umlClass.operations.length > 0) {
+            classLabel += "|"
+            umlClass.operations.forEach(function (a) {
+                classLabel += a + '\\l'
             })
 
         }
 
-        contractString += `${contract.id}[label = "{${contractLabel}}"]`
+        contractString += `${umlClass.id}[label = "{${classLabel}}"]`
         contractString += "\n"
 
-        if (contract.is.length > 0) {
-            contract.is.forEach(function (i) {
-                relationshipString += `${idMapping[i]}->${contract.id}`
+        if (umlClass.generalisations.length > 0) {
+            umlClass.generalisations.forEach(function (i) {
+                relationshipString += `${idMapping[i]}->${umlClass.id}`
                 relationshipString += "\n"
             })
         }
 
-        if (contract.compositions.length > 0) {
-            contract.compositions.forEach(function (i) {
-                compositionString += `${contract.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
+        if (umlClass.compositions.length > 0) {
+            umlClass.compositions.forEach(function (i) {
+                compositionString += `${umlClass.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
                 compositionString += "\n"
             })
         }
 
-        if (contract.associations.length > 0) {
-            contract.associations.forEach(function (i) {
-                associationString += `${idMapping[i]}->${contract.id}[constraint=true, arrowtail=open]`
+        if (umlClass.associations.length > 0) {
+            umlClass.associations.forEach(function (i) {
+                associationString += `${idMapping[i]}->${umlClass.id}[constraint=true, arrowtail=open]`
                 associationString += "\n"
             })
         }
@@ -333,7 +333,7 @@ function addAttribute(umlClass, variable){
         throw VError(err, `Could not format attribute ${umlClass.name}.${variable.name}`)
     }
 
-    // add to contract compositions
+    // add to class compositions
     if (variable.typeName.type === 'UserDefinedTypeName') {
         addAssociation(umlClass, variable.typeName.namePath)
     }
@@ -362,20 +362,21 @@ function addAssociation(umlClass, targetClassName) {
 //     })
 // }
 
-function addContract(node){
+function addUmlClass(node){
 
-    const baseContractNames = node.baseContracts.map(c => c.baseName.namePath)
+    const baseContractNames = node.baseContracts.map(contract => contract.baseName.namePath)
 
     const umlClass = {
         id: ++idCnt,
         name: node.name,
         isInterface: node.kind === "interface",
         isLibrary: node.kind === "library",
+        isStruct: node.type === "StructDefinition",
         isAbstract: false,
         attributes: [],
         operations: [],
         // relationships
-        is: baseContractNames,  // generalisation
+        generalisations: baseContractNames,  // generalisations
         compositions: [],       // to be removed
         associations: [],       // storage variable
         dependencies: [],       // memory variables
@@ -419,10 +420,10 @@ function addContract(node){
 
     idMapping[node.name] = umlClass.id
 
-    contracts.push(umlClass)
+    umlClasses.push(umlClass)
 }
 
-function addStructure(parentUmlClass, node){
+function addStructure(parentUmlClass, node) {
     const umlClass = {
         id: ++idCnt,
         name: node.name,
