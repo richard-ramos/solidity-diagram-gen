@@ -3,16 +3,17 @@ const klaw = require('klaw')
 const path = require('path')
 const SolidityParser = require("solidity-parser-antlr")
 const Viz = require('viz.js')
+const svg_to_png = require('svg-to-png')
 const VError = require('verror')
 const debug = require('debug')('solidity-diagram-gen')
 
 let contracts = []
+let importedContracts = []
 let structures = []
 let idMapping = {}
-let relationShips = []
 let idCnt = 0
 
-const processSolFiles = (fileArray) => {
+const processSolFiles = (fileArray, output) => {
 
     fileArray.forEach(function(f){
         try {
@@ -25,6 +26,9 @@ const processSolFiles = (fileArray) => {
                     if(contract.type === "ContractDefinition"){
                         addContract(contract)
                     }
+                    else if (contract.type === "ImportDirective") {
+                        importedContracts.push(contract)
+                    }
                 })
             }
         } catch (err) {
@@ -36,7 +40,7 @@ const processSolFiles = (fileArray) => {
 
     const dot = constructDot()
 
-    outputDiagram(dot)
+    outputDiagram(dot, output)
 }
 
 function constructDot() {
@@ -46,51 +50,51 @@ function constructDot() {
     let compositionString = ""
     let associationString = ""
 
-    contracts.forEach(function (c) {
+    contracts.forEach(function (contract) {
         let contractLabel = ""
 
-        if (c.isInterface) {
+        if (contract.isInterface) {
             contractLabel += "«interface»\\n"
         }
 
-        contractLabel += `${c.name}`
+        contractLabel += `${contract.name}`
 
-        if (c.attributes.length > 0) {
+        if (contract.attributes.length > 0) {
             contractLabel += "|"
-            c.attributes.forEach(function (a) {
+            contract.attributes.forEach(function (a) {
                 contractLabel += a + '\\l'
             })
 
         }
 
-        if (c.methods.length > 0) {
+        if (contract.methods.length > 0) {
             contractLabel += "|"
-            c.methods.forEach(function (a) {
+            contract.methods.forEach(function (a) {
                 contractLabel += a + '\\l'
             })
 
         }
 
-        contractString += `${c.id}[label = "{${contractLabel}}"]`
+        contractString += `${contract.id}[label = "{${contractLabel}}"]`
         contractString += "\n"
 
-        if (c.is.length > 0) {
-            c.is.forEach(function (i) {
-                relationshipString += `${idMapping[i]}->${c.id}`
+        if (contract.is.length > 0) {
+            contract.is.forEach(function (i) {
+                relationshipString += `${idMapping[i]}->${contract.id}`
                 relationshipString += "\n"
             })
         }
 
-        if (c.compositions.length > 0) {
-            c.compositions.forEach(function (i) {
-                compositionString += `${c.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
+        if (contract.compositions.length > 0) {
+            contract.compositions.forEach(function (i) {
+                compositionString += `${contract.id}->${idMapping[i]}[constraint=true, arrowtail=diamond]`
                 compositionString += "\n"
             })
         }
 
-        if (c.associations.length > 0) {
-            c.associations.forEach(function (i) {
-                associationString += `${idMapping[i]}->${c.id}[constraint=true, arrowtail=open]`
+        if (contract.associations.length > 0) {
+            contract.associations.forEach(function (i) {
+                associationString += `${idMapping[i]}->${contract.id}[constraint=true, arrowtail=open]`
                 associationString += "\n"
             })
         }
@@ -145,18 +149,38 @@ function constructDot() {
     }`
 }
 
-function outputDiagram(dot) {
+function outputDiagram(dot, output = 'both') {
 
     const svg = Viz(dot)
-    const filename = "diagram" /*+ "-" + (new Date()).YYYYMMDDHHMMSS()*/ + ".svg"
+    const diagramName = 'diagram' /*+ "-" + (new Date()).YYYYMMDDHHMMSS()*/
+    const svgFilename = diagramName + ".svg"
+    const pngFilename = diagramName + ".png"
 
-    fs.writeFile(filename, svg, function (err) {
-        if (err) {
-            return console.log(err)
-        } else {
-            console.log("Diagram generated: " + filename)
+    try {
+        fs.writeFile(svgFilename, svg, function (err) {
+            if (err) {
+                return console.log(err)
+            } else {
+                console.log("Diagram generated: " + svgFilename)
+            }
+        })
+    }
+    catch (err) {
+        throw VError(err, `Failed to write to SVG file ${svgFilename}`)
+    }
+
+    if (output === 'both' || output === 'png') {
+        try {
+            const svgInput = path.resolve(path.join( process.cwd(), svgFilename ))
+            svg_to_png.convert([svgInput], process.cwd())
         }
-    })
+        catch (err) {
+            throw VError(err, `Failed to convert SVG file ${svgImput} to PNG`)
+        }
+    }
+    else {
+        // TODO delete the svg file
+    }
 }
 
 const getMethod = function(contract, node){
@@ -299,6 +323,7 @@ const addContract = function(node){
         id: ++idCnt,
         name: node.name,
         isInterface: node.kind === "interface",
+        isAbstract: false,
         is: baseContractNames,
         attributes: [],
         methods: [],
@@ -352,14 +377,15 @@ const addStructure = function(node, parentContract){
 }
 
 const analyzeComposition = function(contracts, structs){
-    let func = function(c){
-        let currentComposition = c.compositions.filter(function(item, pos, self) {
+
+    const func = function(contract){
+        let currentComposition = contract.compositions.filter(function(item, pos, self) {
             return self.indexOf(item) === pos
         })
 
         currentComposition.forEach(function(comp){
             if(!(comp in idMapping)){
-                c.compositions = c.compositions.filter(item => item !== comp)
+                contract.compositions = contract.compositions.filter(item => item !== comp)
             }
         })
     }
@@ -411,16 +437,28 @@ const generateDiagram = function(filepath){
     debug(`Generating diagram for Solidity files under ${filepath}`)
 
     try {
-        if(fs.lstatSync(filepath).isDirectory()){
+        const fileOrDir = fs.lstatSync(filepath)
+
+        if(fileOrDir.isDirectory() ) {
+
             const files = []
             klaw(filepath)
-            .on('data', file => {
-                if (path.extname(file.path) === '.sol')
-                    files.push(file.path)
-                })
-            .on('end', () => processSolFiles(files))
+              .on('data', file => {
+                  if (path.extname(file.path) === '.sol')
+                      files.push(file.path)
+              })
+              .on('end', () => processSolFiles(files))
+        }
+        else if (fileOrDir.isFile() ) {
+
+            // if (path.extname(fileOrDir.path) === '.sol') {
+                processSolFiles([filepath])
+            // }
+            // else {
+            //     console.error(`Error: File ${filepath} does not have a .sol extension.`)
+            // }
         } else {
-            console.error(`Error: Path ${filepath} is not a directory`)
+            console.error(`Error: Could not find directory or file ${filepath}`)
         }
     } catch(err) {
         if(err.code === 'ENOENT'){

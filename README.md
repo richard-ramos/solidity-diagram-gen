@@ -19,7 +19,20 @@ npm -g install git+https://github.com/naddison36/solidity-diagram-gen.git
 solidity-diagram-gen path/to/contracts/root/folder
 ```
 
-Either method will output a `diagram.svg` file in the working folder.
+Either method will output `diagram.svg` and `diagram.png` files in the working folder.
+
+## Examples
+
+### Open Zeppelin 2.1.2
+
+#### ERC20 Tokens
+![Open Zeppelin ERC20](./examples/openZeppelinERC20.png)
+[Source folder](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.1.2/contracts/token/ERC20)
+
+
+### MakerDAO's SAI Token
+![dappsys DSToken](./examples/dappsysDSToken.png)
+[Source file](https://github.com/bokkypoobah/MakerDAOSaiContractAudit/blob/master/audit/deployed-contracts/DSTokenSai-0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359.sol)
 
 ## About
 

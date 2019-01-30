@@ -20,6 +20,7 @@
     "klaw": "^2.1.1",
     "openzeppelin-solidity": "^2.1.2",
     "solidity-parser-antlr": "^0.4.0",
+    "svg-to-png": "^4.0.0",
     "verror": "^1.10.0",
     "viz.js": "^1.8.1"
   }
