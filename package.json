@@ -1,20 +1,26 @@
 {
   "name": "solidity-diagram-gen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Solidity Class Diagram Generator",
-  "main": "index.js",
+  "main": "./bin/execute.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sdg": "./bin/execute.js"
   },
-"bin": {
-      "solidity-diagram-gen": "./bin/execute.js"
-    },
-    "preferGlobal": true,
-  "author": "Richard Ramos <info@richardramos.me>",
+  "bin": {
+    "solidity-diagram-gen": "./bin/execute.js"
+  },
+  "preferGlobal": true,
+  "contributors": [
+    "Richard Ramos <info@richardramos.me>",
+    "Nick Addison"
+  ],
   "license": "MIT",
   "dependencies": {
+    "debug": "^4.1.1",
     "klaw": "^2.1.1",
-    "solidity-parser": "^0.4.0",
+    "openzeppelin-solidity": "^2.1.2",
+    "solidity-parser-antlr": "^0.4.0",
+    "verror": "^1.10.0",
     "viz.js": "^1.8.1"
   }
 }
