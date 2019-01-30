@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 const program = require('commander')
-const generateDiagram = require('./src/solidity-diagram-gen.js').generateDiagram
+const generateDiagram = require('./src/generator').generateDiagram
 
 program
   .usage('[options] <file or root folder>\n\nGenerates UML diagrams from Solidity source code')

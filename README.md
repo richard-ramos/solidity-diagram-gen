@@ -68,6 +68,12 @@ $ node sol2uml.js -o both path/to/contracts/root/folder
 
 ## UML Syntax
 
+Good online resources for learning UML
+* [UML 2 Class Diagramming Guidelines](http://www.agilemodeling.com/style/classDiagram.htm)
+* [Creating class diagrams with UML](https://www.ionos.com/digitalguide/websites/web-development/class-diagrams-with-uml/)
+
+### Terminology differences
+
 A Solidity variable becomes an attribute in UML and a Solidity function becomes an operation in UML.
 
 ### Stereotypes
@@ -89,11 +95,17 @@ A Solidity variable becomes an attribute in UML and a Solidity function becomes 
 * \# denotes internal
 
 ### UML Relationships
-* Association
-* Generalisation
-* Composition
+
+The most concise explanation of the [What is the difference between association, aggregation and composition](https://stackoverflow.com/questions/885937/what-is-the-difference-between-association-aggregation-and-composition/34069760#34069760).
+
+The following UML relationships are used in Solidity terms:
+* Association contract A has a storage variable of contract or interface B. The variable will exist beyond the transaction in the smart contract.
+* Dependency contract, interface or library A has a memory variable of class B. This can be a function parameter, return parameter or function variable. The variable will no longer exist beyond the transaction.
+* Generalisation contract or interface A inherits from contract, interface or abstract contract B
+* Composition 
 * Aggregation
-* Dependency
+
+Note a class in the above can also be an Interface, Abstract class or Library.
 
 ## About
 
@@ -106,10 +118,12 @@ The diagrams are generated using [viz.js](https://github.com/mdaines/viz.js/) wh
 ## TODO
 
 * Document UML syntax
+* Use new UML relationships
+* Add dependencies from code blocks. ie uses on contracts within the functions
+* enum support
 * Option to specify a list of contracts to generate along with their dependencies. This was not all contracts in dependent libraries like Open Zeppelin need to be generated.
 * Option to specify output location and file names
 * Portrait output mode
-* Add dependency relationships. ie uses on contracts within the functions
-* Add indicator for mutable, view and pure functions
+* Add indicator for state mutability. eg view and pure functions
 * Group contracts within a boundary. eg Open Zeppelin
 

@@ -73,6 +73,10 @@ contract SomeImpl is SomeInterface {
         somePublicNumber = 0;
     }
 
+    function twoStructs(SomeStruct struct1, SomeStruct struct2) internal pure
+    returns (bool) {
+        return struct1.count == struct2.count;
+    }
 
     function defaultReset() {
         somePublicNumber = 0;

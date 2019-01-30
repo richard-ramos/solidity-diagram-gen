@@ -57,15 +57,15 @@ function constructDot() {
         let contractLabel = ""
 
         if (contract.isInterface) {
-            contractLabel += "«interface»\\n"
+            contractLabel += "«Interface»\\n"
         }
 
         if (contract.isLibrary) {
-            contractLabel += "«library»\\n"
+            contractLabel += "«Library»\\n"
         }
 
         if (contract.isAbstract) {
-            contractLabel += "«abstract»\\n"
+            contractLabel += "«Abstract»\\n"
         }
 
         contractLabel += `${contract.name}`
@@ -78,9 +78,9 @@ function constructDot() {
 
         }
 
-        if (contract.methods.length > 0) {
+        if (contract.operations.length > 0) {
             contractLabel += "|"
-            contract.methods.forEach(function (a) {
+            contract.operations.forEach(function (a) {
                 contractLabel += a + '\\l'
             })
 
@@ -201,7 +201,7 @@ function outputDiagram(dot, output = 'both') {
     }
 }
 
-const getMethod = function(contract, node){
+function addOperation(contract, node){
     let mtString = ""
     let isAbstract = false
 
@@ -257,7 +257,7 @@ const getMethod = function(contract, node){
         mtString += (node.type === "EventDefinition" ? "«event» " : "«modifier» ") + node.name + "(" + formatParameters(node.parameters) + ")"
     }
 
-    contract.methods.push(mtString)
+    contract.operations.push(mtString)
 
     return isAbstract
 }
@@ -309,7 +309,7 @@ function formatType(typeName) {
     throw Error(`Could not format type ${typeName.type}`)
 }
 
-const getAttribute = function(contract, variable){
+function addAttribute(contract, variable){
     let attString = ""
 
     switch(variable.visibility){
@@ -335,13 +335,33 @@ const getAttribute = function(contract, variable){
 
     // add to contract compositions
     if (variable.typeName.type === 'UserDefinedTypeName') {
-        contract.compositions.push(variable.typeName.namePath)
+        addComposition(contract, variable.typeName.namePath)
     }
 
     contract.attributes.push(attString)
 }
 
-const addContract = function(node){
+// only adds a class to the composition if its not already in the list
+function addComposition(contract, className) {
+    // if already in the composition list
+    contract.compositions.push(className)
+}
+
+// function getDependencies(body) {
+//
+//     // for each statement
+//     body.statements.forEach( statement => {
+//         if (statement.type === 'VariableDeclarationStatement') {
+//             statement.variables.forEach( variable => {
+//                 if (variable.typeName.type === 'UserDefinedTypeName') {
+//                     contract.associations.push(variable.typeName.namePath)
+//                 }
+//             })
+//         }
+//     })
+// }
+
+function addContract(node){
 
     const baseContractNames = node.baseContracts.map(c => c.baseName.namePath)
 
@@ -353,7 +373,7 @@ const addContract = function(node){
         isAbstract: false,
         is: baseContractNames,
         attributes: [],
-        methods: [],
+        operations: [],
         compositions: [],
         associations: [],
     }
@@ -361,13 +381,18 @@ const addContract = function(node){
     node.subNodes.forEach(function(subNode){
         switch(subNode.type){
             case "StateVariableDeclaration":
-                subNode.variables.forEach(v => getAttribute(contract, v))
+                subNode.variables.forEach(variable => {
+                    addAttribute(contract, variable)
+                })
+                break
+            case "StructDefinition":
+                addStructure(subNode, contract)
                 break
             case "ModifierDefinition":
             case "EventDefinition":
             case "FunctionDefinition":
                 // get contract method and check that it's not abstract
-                const isMethodAbstract = getMethod(contract, subNode)
+                const isMethodAbstract = addOperation(contract, subNode)
 
                 // mark contract as abstract if function not implemented
                 // and contract is not already abstract and not an interface
@@ -376,6 +401,11 @@ const addContract = function(node){
                   !contract.isInterface) {
                     contract.isAbstract = true
                 }
+
+                if (subNode.body != null) {
+                    // getDependencies(subNode.body)
+                }
+
                 break
             case "UsingForDeclaration":
                 // register composition relationship
@@ -386,15 +416,10 @@ const addContract = function(node){
 
     idMapping[node.name] = contract.id
 
-    node.subNodes.forEach(node => {
-        if(node.type === "StructDefinition")
-            addStructure(node, contract)
-    })
-
     contracts.push(contract)
 }
 
-const addStructure = function(node, parentContract){
+function addStructure(node, parentContract){
     structObj = {
         id: ++idCnt,
         name: node.name,
@@ -407,7 +432,7 @@ const addStructure = function(node, parentContract){
     // add the Struct attributes
     node.members.forEach(member => {
         if(member.type === "VariableDeclaration"){
-            getAttribute(structObj, member)
+            addAttribute(structObj, member)
         }
     })
 
@@ -416,14 +441,14 @@ const addStructure = function(node, parentContract){
     structures.push(structObj)
 }
 
-const analyzeComposition = function(contracts, structs){
+function analyzeComposition(contracts, structs){
 
-    const func = function(contract){
-        let currentComposition = contract.compositions.filter(function(item, pos, self) {
+    function func(contract){
+        const currentComposition = contract.compositions.filter((item, pos, self) => {
             return self.indexOf(item) === pos
         })
 
-        currentComposition.forEach(function(comp){
+        currentComposition.forEach( comp => {
             if(!(comp in idMapping)){
                 contract.compositions = contract.compositions.filter(item => item !== comp)
             }
@@ -433,12 +458,14 @@ const analyzeComposition = function(contracts, structs){
     contracts.forEach(func)
     structs.forEach(func)
 
-    let compFunction = function(c){
-        let currentComposition = c.compositions
-        for(let i = 0; i < currentComposition.length; i++){
-            if(structs.filter(x => x.name === currentComposition[i]).length > 0){
+    function compFunction(contract){
+        const currentComposition = contract.compositions
+
+        for(let i = 0; i < currentComposition.length; i++) {
+
+            if(structs.filter(x => x.name === currentComposition[i]).length > 0) {
                 // Structs cannot exist without their contract
-                c.compositions = c.compositions.filter(item => item !== currentComposition[i])
+                contract.compositions = contract.compositions.filter(item => item !== currentComposition[i])
             }
         }
     }
@@ -446,29 +473,30 @@ const analyzeComposition = function(contracts, structs){
     contracts.forEach(compFunction)
 
     // Structs are associated between them
-    structs.forEach(function(c){
-        let currentComposition = c.compositions
+    structs.forEach(function(contract){
+        const currentComposition = contract.compositions
+
         for(let i = 0; i < currentComposition.length; i++){
             if(structs.filter(x => x.name === currentComposition[i]).length > 0){
-                c.associations.push(currentComposition[i])
-                c.compositions = c.compositions.filter(item => item !== currentComposition[i])
+                contract.associations.push(currentComposition[i])
+                contract.compositions = contract.compositions.filter(item => item !== currentComposition[i])
             }
         }
     })
 
-    assocFunc = function(c){
-        let currentComposition = c.compositions
+    function assocFunc(contract){
+        const currentComposition = contract.compositions
+
         for(let i = 0; i < currentComposition.length; i++){
             if(contracts.filter(x => x.name === currentComposition[i]).length > 0){
-                c.compositions = c.compositions.filter(item => item !== currentComposition[i])
-                c.associations.push(currentComposition[i])
+                contract.compositions = contract.compositions.filter(item => item !== currentComposition[i])
+                contract.associations.push(currentComposition[i])
             }
         }
     }
 
     contracts.forEach(assocFunc)
     structs.forEach(assocFunc)
-
 }
 
 
