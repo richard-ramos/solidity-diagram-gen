@@ -57,6 +57,10 @@ function constructDot() {
             contractLabel += "«interface»\\n"
         }
 
+        if (contract.isAbstract) {
+            contractLabel += "«abstract»\\n"
+        }
+
         contractLabel += `${contract.name}`
 
         if (contract.attributes.length > 0) {
@@ -185,6 +189,7 @@ function outputDiagram(dot, output = 'both') {
 
 const getMethod = function(contract, node){
     let mtString = ""
+    let isAbstract = false
 
     if(node.type === "FunctionDefinition"){
 
@@ -206,8 +211,10 @@ const getMethod = function(contract, node){
                 break
         }
 
+        let methodName = node.name
+
         if(node.isConstructor){
-            mtString += "«constructor» "
+            methodName = 'constructor'
             hasReturnValue = false
         }
 
@@ -220,12 +227,15 @@ const getMethod = function(contract, node){
             hasReturnValue = false
         }
 
+        // is fallback method?
+        if(methodName === '')
+            methodName = "«fallback»"
 
-        let name = node.name
-        if(name === '' && !node.isConstructor)
-            name = "«fallback»"
+        if (node.body === null) {
+            isAbstract = true
+        }
 
-        mtString += name + "(" + parameters + ")" + (hasReturnValue ? " : (" + returnValues + ")" : "")
+        mtString += methodName + "(" + parameters + ")" + (hasReturnValue ? " : (" + returnValues + ")" : "")
     }
 
     if(node.type === "EventDefinition" || node.type === "ModifierDefinition"){
@@ -234,6 +244,8 @@ const getMethod = function(contract, node){
     }
 
     contract.methods.push(mtString)
+
+    return isAbstract
 }
 
 function formatParameters(params) {
@@ -339,7 +351,16 @@ const addContract = function(node){
             case "ModifierDefinition":
             case "EventDefinition":
             case "FunctionDefinition":
-                getMethod(contract, subNode)
+                // get contract method and check that it's not abstract
+                const isMethodAbstract = getMethod(contract, subNode)
+
+                // mark contract as abstract if function not implemented
+                // and contract is not already abstract and not an interface
+                if (isMethodAbstract &&
+                  contract.isAbstract === false &&
+                  !contract.isInterface) {
+                    contract.isAbstract = true
+                }
                 break
         }
     })
@@ -451,12 +472,12 @@ const generateDiagram = function(filepath){
         }
         else if (fileOrDir.isFile() ) {
 
-            // if (path.extname(fileOrDir.path) === '.sol') {
+            if (path.extname(filepath) === '.sol') {
                 processSolFiles([filepath])
-            // }
-            // else {
-            //     console.error(`Error: File ${filepath} does not have a .sol extension.`)
-            // }
+            }
+            else {
+                console.error(`Error: File ${filepath} does not have a .sol extension.`)
+            }
         } else {
             console.error(`Error: Could not find directory or file ${filepath}`)
         }
