@@ -60,6 +60,10 @@ function constructDot() {
             contractLabel += "«interface»\\n"
         }
 
+        if (contract.isLibrary) {
+            contractLabel += "«library»\\n"
+        }
+
         if (contract.isAbstract) {
             contractLabel += "«abstract»\\n"
         }
@@ -345,6 +349,7 @@ const addContract = function(node){
         id: ++idCnt,
         name: node.name,
         isInterface: node.kind === "interface",
+        isLibrary: node.kind === "library",
         isAbstract: false,
         is: baseContractNames,
         attributes: [],
@@ -371,6 +376,10 @@ const addContract = function(node){
                   !contract.isInterface) {
                     contract.isAbstract = true
                 }
+                break
+            case "UsingForDeclaration":
+                // register composition relationship
+                contract.compositions.push(subNode.libraryName)
                 break
         }
     })
