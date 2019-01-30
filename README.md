@@ -48,23 +48,13 @@ To generate SVG and PNG diagrams of all Solidity files under some root folder.  
 $ node sol2uml.js -o both path/to/contracts/root/folder
 ```
 
-## Examples
+## Example from Open Zeppelin
 
-### Open Zeppelin ERC20 Tokens
+Open Zeppelin's ERC20 token contracts
 ![Open Zeppelin ERC20](./examples/OpenZeppelinERC20.svg)
-[Source folder for version 2.1.2](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.1.2/contracts/token/ERC20)
+[Generated from version 2.1.2](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.1.2/contracts/token/ERC20)
 
-### Open Zeppelin Access
-![Open Zeppelin ERC20](./examples/OpenZeppelinAccess.svg)
-[Source folder for version 2.1.2](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.1.2/contracts/access)
-
-### MakerDAO's SAI Token
-![dappsys DSToken](./examples/dappsysDSToken.svg)
-[Source file](https://github.com/bokkypoobah/MakerDAOSaiContractAudit/blob/master/audit/deployed-contracts/DSTokenSai-0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359.sol)
-
-### IDEX
-![IDEX](./examples/idex.svg)
-[Source file](https://github.com/AuroraDAO/idex)
+See [examples](./examples/README.md) for more diagrams.
 
 ## UML Syntax
 
