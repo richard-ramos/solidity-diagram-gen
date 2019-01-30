@@ -63,7 +63,7 @@ $ node sol2uml.js -o both path/to/contracts/root/folder
 [Source file](https://github.com/bokkypoobah/MakerDAOSaiContractAudit/blob/master/audit/deployed-contracts/DSTokenSai-0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359.sol)
 
 ### IDEX
-![IDEX](./examples/dappsysDSToken.svg)
+![IDEX](./examples/IDEX.svg)
 [Source file](https://github.com/AuroraDAO/idex)
 
 ## UML Syntax
