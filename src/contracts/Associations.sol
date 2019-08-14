@@ -154,7 +154,7 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
         FunctionParamAssoc paramAssoc,
         FunctionParamAbstract paramAbstract,
         FunctionParamInterface paramInterface) public
-        returns (FunctionReturnParamAssoc functionReturnParamAssoc) {
+        returns (FunctionReturnParamAssoc returnParamAssoc) {
             someInt = 22;
 
             uint256 counter = 0;

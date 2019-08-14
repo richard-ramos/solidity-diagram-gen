@@ -5,6 +5,6 @@ lib/__tests__
 lib/*.map
 logs
 *.logs
-*.svg
 *.png
 *.dot
+testDiagrams
