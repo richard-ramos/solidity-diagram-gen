@@ -1,38 +1,58 @@
 {
   "name": "sol2uml",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Unified Modeling Language (UML) class diagram generator for Solidity contracts",
-  "main": "sol2uml.js",
+  "main": "./lib/sol2uml.js",
+  "types": "./lib/sol2uml.d.ts",
   "scripts": {
-    "sol2uml": "node ./sol2uml.js"
+    "buildSol": "cd ./src/contracts && solc *",
+    "build": "tsc --build ./tsconfig.json",
+    "clean": "tsc --build --clean ./tsconfig.json"
   },
   "preferGlobal": true,
   "contributors": [
-    "Richard Ramos <info@richardramos.me>",
     "Nick Addison"
   ],
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.19.0",
+    "commander": "^3.0.0",
     "debug": "^4.1.1",
     "klaw": "^2.1.1",
-    "openzeppelin-solidity": "^2.1.2",
-    "solidity-parser-antlr": "^0.4.0",
+    "solidity-parser-antlr": "^0.4.8",
     "svg-to-png": "^4.0.0",
     "verror": "^1.10.0",
     "viz.js": "^1.8.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "@types/klaw": "^3.0.0",
+    "@types/verror": "^1.10.3",
+    "jest": "^24.8.0",
+    "openzeppelin-solidity": "^2.3.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  },
+  "files": [
+    "lib/*.js",
+    "lib/*.d.ts",
+    "sol2uml"
+  ],
+  "bin": {
+    "sol2uml": "lib/sol2uml.js"
   },
   "keywords": [
     "Unified Modeling Language",
     "UML",
     "Solidity",
     "Ethereum",
+    "Class diagram",
     "Class",
     "diagram",
     "Contract",
     "Interface",
     "Relationship",
     "SVG",
-    "Blockchain"
+    "Blockchain",
+    "Model"
   ]
 }

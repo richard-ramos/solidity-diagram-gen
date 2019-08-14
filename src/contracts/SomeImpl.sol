@@ -1,8 +1,15 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.5.10;
 
 import "./SomeInterface.sol";
+import "./DependentInterface.sol";
+//import "./DependentInterface2.sol";
 
 contract SomeImpl is SomeInterface {
+
+    enum SomeEnum { Yes, No, Maybe }
+    enum lowerCaseEnum { What, The }
+
+    SomeEnum someEnum = SomeEnum.Yes;
 
     uint256 public somePublicNumber;
     bool public somePublicBool;
@@ -13,14 +20,25 @@ contract SomeImpl is SomeInterface {
     bool private somePrivateBool;
     string private somePrivateString;
 
+    uint256 internal someInternalNumber;
+    bool internal someInternalBool;
+    string internal someInternalString;
+
     uint256[] private somePrivateIntArray;
-    uint256[][] public somePublicMultArray;
+    uint256[][] public somePublicMultiArray;
+
+    DependentInterface public interfaceDependency;
+
+    // SomeInterface has a Storage reference type and a realization
+    SomeInterface public someInterface;
 
     SomeStruct someStruct;
     SomeStruct[] someStructs;
 
     mapping (address => uint256) public balances;
     mapping (address => bool) private whitelist;
+    mapping (address => mapping (address => string)) private nestedMapping;
+    mapping (address => SomeStruct) private mappingWithStruct;
 
     struct SomeStruct {
         bool valid;
@@ -32,22 +50,35 @@ contract SomeImpl is SomeInterface {
     struct AnotherStruct {
         bool active;
         uint256 balance;
+        YetAnotherStruct yos;
+    }
+
+    struct YetAnotherStruct {
+        bool active;
+        uint256[] balances;
     }
 
     event Add(uint256 beforeValue, uint256 afterValue);
 
     modifier someModifier(bool someParam) {
-        require(somePublicNumber > 0);
-        require(someParam);
+        require(somePublicNumber > 0, 'Can not be zero');
+        require(someParam, 'Invalid param');
         _;
     }
+
+    modifier modifierMultiParams(bool someParam, uint256 someInt) {
+            require(somePublicNumber > 0, 'Can not be zero');
+            require(someParam, 'Invalid someParam');
+            require(someInt != 0, 'Invalid someInt');
+            _;
+        }
 
     function add(uint256 someNumber) public returns (uint256) {
         somePublicNumber = somePublicNumber + someNumber;
         return somePublicNumber;
     }
 
-    function returnsTuple() public returns (bool success, string result) {
+    function returnsTuple() public pure returns (bool, string memory) {
         return (false, "testing");
     }
 
@@ -56,10 +87,6 @@ contract SomeImpl is SomeInterface {
     }
 
     function publicPure() public pure returns (bool success) {
-        return true;
-    }
-
-    function defaultPure() pure returns (bool success) {
         return true;
     }
 
@@ -79,17 +106,17 @@ contract SomeImpl is SomeInterface {
         somePublicNumber = 0;
     }
 
-    function twoStructs(SomeStruct struct1, SomeStruct struct2) internal pure
+    function publicPayable() public payable {
+    }
+
+    function externalPayable() public payable {
+    }
+
+    function twoStructs(SomeStruct memory struct1, SomeStruct memory struct2) internal pure
     returns (bool) {
         return struct1.count == struct2.count;
     }
 
-    function defaultReset() {
-        somePublicNumber = 0;
-    }
-
     // fallback function
-    function() public {
-
-    }
+    function() external {}
 }

@@ -1,3 +1,10 @@
 node_modules
 .idea
-diagram.*
+.vscode
+lib/__tests__
+lib/*.map
+logs
+*.logs
+*.svg
+*.png
+*.dot

@@ -1,3 +1,4 @@
+// Test not specifying pragma solidity
 
 import "./SomeInterface.sol";
 import "./Service.sol";
@@ -13,11 +14,10 @@ contract Caller {
         someImpl = _someImpl;
     }
 
-    function call(address serviceAddress) public view
-    returns (uint256) {
+    function call(address serviceAddress) public returns (uint256) {
 
         Service service = Service(serviceAddress);
-        return service.call();
+        return service.increment(true);
     }
 
 }
