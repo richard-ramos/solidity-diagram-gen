@@ -7,7 +7,7 @@ The following installation assumes [Node.js](https://nodejs.org/en/download/) ha
 
 To install globally so you can run `sol2uml` from anywhere
 ```bash
-npm install sol2uml -g --production
+npm link sol2uml --only=production
 ```
 
 ## Usage
@@ -30,22 +30,22 @@ Options:
 
 To generate the test contracts in this repo
 ```Bash
-$ sol2uml.js ./src/contracts
+$ sol2uml ./contracts
 ```
 
 To generate a SVG diagram of all Solidity files under some root folder and output the svg file to a specific location
 ```Bash
-$ sol2uml.js path/to/contracts/root/folder -n ./outputFile.svg
+$ sol2uml path/to/contracts/root/folder -n ./outputFile.svg
 ```
 
 To generate a diagram of all contracts in a single Solidity file, the output file in png format to output file `./someFile.png`
 ```Bash
-$ sol2uml.js path/to/contracts/root/folder/solidity/file.sol -f png -n ./someFile.png
+$ sol2uml path/to/contracts/root/folder/solidity/file.sol -f png -n ./someFile.png
 ```
 
 To generate SVG and PNG diagrams of all Solidity files under some root folder.  The output will be `diagram.svg` and `diagram.png` files in the working folder.
 ```Bash
-$ sol2uml.js ./contracts -f all -v
+$ sol2uml ./contracts -f all -v
 ```
 
 ## Example from Open Zeppelin
@@ -71,7 +71,7 @@ A Solidity variable becomes an attribute in UML and a Solidity function becomes 
 #### Class stereotypes
 
 * Interface
-* Abstract
+* Abstract - if any of the contract's functions are abstract, the class will have an Abstract stereotype. Child contracts of abstract contracts that do not implement all the abstract functions are currently not marked as Abstract.
 * Library
 
 #### Operator stereotypes
@@ -82,18 +82,19 @@ A Solidity variable becomes an attribute in UML and a Solidity function becomes 
 * fallback - abstract fallback functions will just have an abstract stereotype.
 * payable - payable fallback functions will just have a fallback stereotype.
 
-### UML Relationships
+### UML Associations
 
-The most concise explanation of the [What is the difference between association, aggregation and composition](https://stackoverflow.com/questions/885937/what-is-the-difference-between-association-aggregation-and-composition/34069760#34069760).
+Lines:
+- Solid lines are used to link the contract types of storage (state) variables. This can be linked to contracts, interfaces or libraries.
+- Solid lines are also used for generalisations of contracts and abstract contracts.
+- Solid lines are also used for aggregated structs and enums
+- Dashed lines are used or generalisations of interfaces.
+- Dash lines are also used for types of memory variables.
 
-The following UML relationships are used in Solidity terms:
-* Association contract `A` has a storage variable of contract or interface `B`. The variable will exist beyond the transaction in the smart contract.
-* Dependency contract interface or library `A` has a memory variable of class `B`. This can be a function parameter, return parameter or function variable. The variable will no longer exist beyond the transaction.
-* Generalisation contract or interface `A` inherits from contract, interface or abstract contract `B`
-* Composition 
-* Aggregation
-
-Note a class in the above can also be an Interface, Abstract class or Library.
+Heads/Tails:
+- An empty triangle head is used for generalisations of contracts, interfaces and abstract contracts.
+- An open arrow head is used for storage or memory variable dependencies
+- A diamond tail is used for aggregations of structs and enums
 
 ## About
 
