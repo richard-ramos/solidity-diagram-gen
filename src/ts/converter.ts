@@ -12,7 +12,11 @@ const svg_to_png = require('svg-to-png')
 
 export type OutputFormats = 'svg' | 'png' | 'dot' | 'all'
 
-export const convert = async(fileOrFolder: string, outputFormat: OutputFormats = 'svg', outputFilename?: string, clusterFolders: boolean = false): Promise<void> => {
+export const convert = async(
+    fileOrFolder: string,
+    outputFormat: OutputFormats = 'svg',
+    outputFilename?: string,
+    clusterFolders: boolean = false): Promise<void> => {
 
     const files = await getSolidityFilesFromFolderOrFile( fileOrFolder )
 
@@ -39,12 +43,11 @@ export const convert = async(fileOrFolder: string, outputFormat: OutputFormats =
 
     const svg = convertDot2Svg(dot)
 
-    if (outputFormat === 'svg' || outputFormat === 'all') {
-        writeSVG(svg, outputFilename)
-    }
+    // write svg file even if only wanting png file as we convert svg files to png
+    writeSVG(svg, outputFilename, outputFormat)
 
     if (outputFormat === 'png' || outputFormat === 'all') {
-        writePng(svg, outputFilename, outputFormat)
+        await writePng(svg, outputFilename)
     }
 }
 
@@ -189,9 +192,14 @@ export function writeDot(dot: string, dotFilename = 'classDiagram.dot') {
     })
 }
 
-export function writeSVG(svg: any, svgFilename = 'classDiagram.svn') {
+export function writeSVG(svg: any, svgFilename = 'classDiagram.svn', outputFormats: OutputFormats = 'png') {
 
     debug(`About to write SVN file to ${svgFilename}`)
+
+    if (outputFormats === 'png') {
+        const parsedFile = path.parse(svgFilename)
+        svgFilename = parsedFile.dir + '/' + parsedFile.name + '.svg'
+    }
 
     writeFile(svgFilename, svg, err => {
         if (err) {
@@ -202,24 +210,24 @@ export function writeSVG(svg: any, svgFilename = 'classDiagram.svn') {
     })
 }
 
-export function writePng(svg: any, pngFilename = 'classDiagram.png', outputFormats: OutputFormats = 'png') {
+export async function writePng(svg: any, pngFilename = 'classDiagram.png'): Promise<void> {
 
-    // TODO need to get correct svn file name
-    const svgFilename = pngFilename + ".svg"
-
-    debug(`About to convert svg file ${svgFilename} to png file ${pngFilename}`)
-
+    // get svg file name from png file name
+    const parsedPngFile = path.parse(pngFilename)
+    const svgFilename = parsedPngFile.dir + '/' + parsedPngFile.name + '.svg'
     const svgInput = path.resolve(path.join( process.cwd(), svgFilename ))
 
-    svg_to_png.convert([svgInput], process.cwd())
-        .then(() => {
-            debug(`Generated PNG file ${pngFilename}`)
-        })
-        .catch((err: Error) => {
-            throw new VError(err, `Failed to convert SVG file ${svgInput} to PNG file ${pngFilename}`)
-        })
+    // get full path to folder of png output file
+    const outputFolder = path.join( process.cwd(), path.dirname(pngFilename))
 
-    if (outputFormats === 'png') {
-        // TODO delete the svg file
+    debug(`About to convert svg file ${svgInput} to png file ${pngFilename}`)
+
+    try {
+        await svg_to_png.convert([svgInput], outputFolder)
     }
+    catch (err) {
+        throw new VError(err, `Failed to convert SVG file ${svgInput} to PNG file ${pngFilename}`)
+    }
+
+    debug(`Generated png file ${pngFilename}`)
 }
