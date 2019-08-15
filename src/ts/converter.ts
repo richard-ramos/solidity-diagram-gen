@@ -190,7 +190,12 @@ export function writeSVG(svg: any, svgFilename = 'classDiagram.svn', outputForma
 
     if (outputFormats === 'png') {
         const parsedFile = path.parse(svgFilename)
-        svgFilename = parsedFile.dir + '/' + parsedFile.name + '.svg'
+        if (!parsedFile.dir) {
+            svgFilename = process.cwd() + '/' + parsedFile.name + '.svg'
+        }
+        else {
+            svgFilename = parsedFile.dir + '/' + parsedFile.name + '.svg'
+        }
     }
 
     writeFile(svgFilename, svg, err => {
