@@ -43,3 +43,19 @@ Generated from running
 sol2uml 0xf5dce57282a584d2746faf1593d3121fcac444dc
 ```
 This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0xf5dce57282a584d2746faf1593d3121fcac444dc#code
+
+## Chainlink
+![Chainlink](./chainlink.svg)
+Generated from running
+```bash
+sol2uml 0x79fEbF6B9F76853EDBcBc913e6aAE8232cFB9De9
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0x79fEbF6B9F76853EDBcBc913e6aAE8232cFB9De9#code
+
+## Augur
+![Augur](./augur.svg)
+Generated from running
+```bash
+sol2uml 0x7F27B0598949DbF9e539BBD217f15BF3F5E97999
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0x7F27B0598949DbF9e539BBD217f15BF3F5E97999#code
