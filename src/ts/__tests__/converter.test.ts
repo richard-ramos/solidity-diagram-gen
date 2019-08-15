@@ -5,7 +5,7 @@ import { convertDot2Svg, writeSVG } from '../converter'
 
 describe('Converter', () => {
 
-    test('convert a valid dot to svg', (done) => {
+    test('convertUmlClasses a valid dot to svg', (done) => {
 
         readFile('./src/ts/__tests__/SomeImpl.dot', (err, dotBuf) => {
             if (err) {

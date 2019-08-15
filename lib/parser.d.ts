@@ -1,4 +1,3 @@
+import { ASTNode } from 'solidity-parser-antlr';
 import { UmlClass } from './umlClass';
-export declare const getSolidityFilesFromFolderOrFiles: (folderOrFilePaths: string[]) => string[];
-export declare const getSolidityFilesFromFolderOrFile: (folderOrFilePath: string) => Promise<string[]>;
-export declare const parseSolidityFile: (fileName: string) => UmlClass[];
+export declare function convertNodeToUmlClass(node: ASTNode, codeSource: string): UmlClass[];

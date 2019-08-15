@@ -16,12 +16,14 @@ npm link sol2uml --only=production
 ## Usage
 
 To see the usage options
-```Bash
+```
 $ sol2uml -h
+Usage: sol2uml <fileFolderAddress> [options]
 
-Usage: sol2uml [options] <file or root folder>
-
-Generates UML diagrams from Solidity source code
+Generates UML diagrams from Solidity source code.
+If no file, folder or address is passes as the first argument, the working folder is used.
+When a folder is used, all *.sol files are found in that folder and all sub folders.
+If an Ethereum address with a 0x prefix is passed, the verified source code from Etherscan will be used.
 
 Options:
   -v, --verbose                 With debugging statements
@@ -31,24 +33,29 @@ Options:
   -h, --help                    output usage information
 ```
 
-To generate the test contracts in this repo
+To generate a diagram of all contracts under the contracts folder and its sub folders
 ```Bash
-$ sol2uml ./contracts
+sol2uml ./contracts
 ```
 
-To generate a SVG diagram of all Solidity files under some root folder and output the svg file to a specific location
+To generate a diagram of EtherDelta's contracts from the verified source code on Etherscan. The output wil be a svg file `0x8d12A197cB00D4747a1fe03395095ce2A5CC6819.svg` in the working folder.
 ```Bash
-$ sol2uml path/to/contracts/root/folder -n ./outputFile.svg
+sol2uml 0x8d12A197cB00D4747a1fe03395095ce2A5CC6819
+```
+
+To generate all Solidity files under some root folder and output the svg file to a specific location
+```Bash
+sol2uml path/to/contracts/root/folder -n ./outputFile.svg
 ```
 
 To generate a diagram of all contracts in a single Solidity file, the output file in png format to output file `./someFile.png`
 ```Bash
-$ sol2uml path/to/contracts/root/folder/solidity/file.sol -f png -n ./someFile.png
+sol2uml path/to/contracts/root/folder/solidity/file.sol -f png -n ./someFile.png
 ```
 
-To generate SVG and PNG diagrams of all Solidity files under some root folder.  The output will be `diagram.svg` and `diagram.png` files in the working folder.
+To generate diagrams of all Solidity files under some root folder.  The output will be `contracts.svg` and `contracts.png` files in the working folder.
 ```Bash
-$ sol2uml ./contracts -f all -v
+sol2uml ./contracts -f all -v
 ```
 
 ## Example from Open Zeppelin

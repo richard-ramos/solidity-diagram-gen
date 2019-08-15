@@ -1,10 +1,9 @@
 
 const debug = require('debug')('sol2uml')
 
-import {writeFile} from 'fs'
-import {VError} from 'verror'
-import {getSolidityFilesFromFolderOrFile, parseSolidityFile} from './parser'
-import {Association, ClassStereotype, ReferenceType, UmlClass} from './umlClass'
+import { writeFile } from 'fs'
+import { Association, ClassStereotype, ReferenceType, UmlClass} from './umlClass'
+import { VError } from 'verror'
 
 const path = require('path')
 const Viz = require('viz.js')
@@ -12,19 +11,12 @@ const svg_to_png = require('svg-to-png')
 
 export type OutputFormats = 'svg' | 'png' | 'dot' | 'all'
 
-export const convert = async(
-    fileOrFolder: string,
+export const convertUmlClasses = async(
+    umlClasses: UmlClass[],
+    outputBaseName: string,
     outputFormat: OutputFormats = 'svg',
     outputFilename?: string,
     clusterFolders: boolean = false): Promise<void> => {
-
-    const files = await getSolidityFilesFromFolderOrFile( fileOrFolder )
-
-    let umlClasses: UmlClass[] = []
-
-    for (const file of files) {
-        umlClasses = umlClasses.concat(await parseSolidityFile(file))
-    }
 
     const dot = convertUmlClasses2Dot(umlClasses, clusterFolders)
 
@@ -38,12 +30,12 @@ export const convert = async(
     if (!outputFilename) {
         // If all output then extension is svn
         const outputExt = outputFormat === 'all' ? 'svg' : outputFormat
-        outputFilename = fileOrFolder + '.' + outputExt
+        outputFilename = outputBaseName + '.' + outputExt
     }
 
     const svg = convertDot2Svg(dot)
 
-    // write svg file even if only wanting png file as we convert svg files to png
+    // write svg file even if only wanting png file as we convertUmlClasses svg files to png
     writeSVG(svg, outputFilename, outputFormat)
 
     if (outputFormat === 'png' || outputFormat === 'all') {
@@ -65,7 +57,7 @@ node [shape=record, style=filled, fillcolor=gray95]`
 
     let sourceFolder = ''
     for (const umlClass of umlClassesSortedBySourceFiles) {
-        if (sourceFolder !== umlClass.sourceFileFolder) {
+        if (sourceFolder !== umlClass.codeSource) {
             // Need to close off the last subgraph if not the first
             if (sourceFolder != '') {
                 dotString += '\n}'
@@ -73,9 +65,9 @@ node [shape=record, style=filled, fillcolor=gray95]`
 
             dotString += `
 subgraph ${getSubGraphName(clusterFolders)} {
-label="${umlClass.sourceFileFolder}"`
+label="${umlClass.codeSource}"`
 
-            sourceFolder = umlClass.sourceFileFolder
+            sourceFolder = umlClass.codeSource
         }
         dotString += umlClass.dotUmlClass()
     }
@@ -105,10 +97,10 @@ function getSubGraphName(clusterFolders: boolean = false) {
 
 function sortUmlClassesBySourceFolder(umlClasses: UmlClass[]): UmlClass[] {
     return umlClasses.sort((a, b) => {
-        if (a.sourceFileFolder < b.sourceFileFolder) {
+        if (a.codeSource < b.codeSource) {
             return -1
         }
-        if (a.sourceFileFolder > b.sourceFileFolder) {
+        if (a.codeSource > b.codeSource) {
             return 1
         }
         return 0

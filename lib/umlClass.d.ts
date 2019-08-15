@@ -46,7 +46,7 @@ export interface Association {
 }
 export interface ClassProperties {
     name: string;
-    sourceFile: string;
+    codeSource: string;
     stereotype?: ClassStereotype;
     enums?: {
         [name: string]: string[];
@@ -61,7 +61,7 @@ export declare class UmlClass implements ClassProperties {
     static idCounter: number;
     id: number;
     name: string;
-    sourceFile: string;
+    codeSource: string;
     stereotype?: ClassStereotype;
     attributes: Attribute[];
     operators: Operator[];
@@ -86,5 +86,4 @@ export declare class UmlClass implements ClassProperties {
     static dotParameters(parameters: Parameter[]): string;
     dotStructs(): string;
     dotEnums(): string;
-    readonly sourceFileFolder: string;
 }

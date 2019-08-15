@@ -1,86 +1,10 @@
 
+import { ASTNode, ContractDefinition, ParameterList, TypeName, VariableDeclaration } from 'solidity-parser-antlr'
+import { ClassStereotype, OperatorStereotype, Parameter, ReferenceType, UmlClass, Visibility } from './umlClass'
+
 const debug = require('debug')('sol2uml')
-import {lstatSync, readFileSync} from 'fs'
-import {extname} from 'path'
-import klaw from 'klaw'
-import {ASTNode, ContractDefinition, ParameterList, parse, TypeName, VariableDeclaration} from 'solidity-parser-antlr'
-import {ClassStereotype, OperatorStereotype, Parameter, ReferenceType, UmlClass, Visibility} from './umlClass'
-import {VError} from 'verror'
 
-export const getSolidityFilesFromFolderOrFiles = (folderOrFilePaths: string[]): string[] => {
-
-    let files: string[] = []
-
-    folderOrFilePaths.forEach(folderOrFilePath => {
-        getSolidityFilesFromFolderOrFile(folderOrFilePath).then(result => {
-            files = files.concat(result)
-        })
-    })
-
-    return files
-}
-export const getSolidityFilesFromFolderOrFile = (folderOrFilePath: string): Promise<string[]> => {
-
-    debug(`About to get Solidity files under ${folderOrFilePath}`)
-
-    return new Promise<string[]>((resolve, reject) => {
-        try {
-            const folderOrFile = lstatSync(folderOrFilePath)
-
-            if(folderOrFile.isDirectory() ) {
-
-                const files: string[] = []
-
-                klaw(folderOrFilePath)
-                    .on('data', file => {
-                        if (extname(file.path) === '.sol')
-                            files.push(file.path)
-                    })
-                    .on('end', () => {
-                        debug(`Got Solidity files to be parsed: ${files}`)
-                        resolve(files)
-                    })
-            }
-            else if (folderOrFile.isFile() ) {
-
-                if (extname(folderOrFilePath) === '.sol') {
-                    debug(`Got Solidity file to be parsed: ${folderOrFilePath}`)
-                    resolve([folderOrFilePath])
-                }
-                else {
-                    reject(Error(`File ${folderOrFilePath} does not have a .sol extension.`))
-                }
-            } else {
-                reject(Error(`Could not find directory or file ${folderOrFilePath}`))
-            }
-        } catch(err) {
-            let error: Error
-            if (err && err.code === 'ENOENT') {
-                error = Error(`No such file or folder ${folderOrFilePath}. Make sure you pass in the root directory of the contracts`)
-            }
-            else {
-                error = new VError(err, `Failed to get Solidity files under folder or file ${folderOrFilePath}`)
-            }
-
-            console.error(error.stack)
-            reject(error)
-        }
-    })
-}
-
-export const parseSolidityFile = (fileName: string): UmlClass[] => {
-
-    try {
-        const solidityCode = readFileSync(fileName, 'utf8')
-        const node = parse(solidityCode, {})
-        return parseParentNode(node, fileName)
-
-    } catch (err) {
-        throw new VError(err, `Failed to parse solidity file ${fileName}.`)
-    }
-}
-
-function parseParentNode(node: ASTNode, fileName: string): UmlClass[] {
+export function convertNodeToUmlClass(node: ASTNode, codeSource: string): UmlClass[] {
 
     let umlClasses: UmlClass[] = []
 
@@ -92,10 +16,10 @@ function parseParentNode(node: ASTNode, fileName: string): UmlClass[] {
 
                 let umlClass = new UmlClass({
                     name: childNode.name,
-                    sourceFile: fileName,
+                    codeSource: codeSource,
                 })
 
-                umlClass = praseContractDefinition(umlClass, childNode)
+                umlClass = parseContractDefinition(umlClass, childNode)
 
                 umlClasses.push(umlClass)
             }
@@ -112,7 +36,7 @@ function parseParentNode(node: ASTNode, fileName: string): UmlClass[] {
     return umlClasses
 }
 
-function praseContractDefinition(umlClass: UmlClass, node: ContractDefinition): UmlClass {
+function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): UmlClass {
 
     umlClass.stereotype = parseContractKind(node.kind)
 
@@ -219,6 +143,13 @@ function praseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                     // @ts-ignore ModifierDefinition type missing parameters
                     parameters: parseParameters(subNode.parameters),
                 })
+
+                // @ts-ignore
+                if (subNode.body && subNode.body.statements) {
+                    // Recursively parse modifier statements for associations
+                    // @ts-ignore
+                    umlClass = addAssociations(subNode.body.statements, umlClass)
+                }
                 break
 
             case "EventDefinition":

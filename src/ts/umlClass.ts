@@ -1,4 +1,3 @@
-import { dirname, relative } from 'path'
 
 export enum Visibility {
     None,
@@ -58,7 +57,7 @@ export interface Association {
 
 export interface ClassProperties {
     name: string
-    sourceFile: string
+    codeSource: string
     stereotype?: ClassStereotype
     enums?: {[name: string]: string[]}
     attributes?: Attribute[]
@@ -72,7 +71,7 @@ export class UmlClass implements ClassProperties {
 
     id: number
     name: string
-    sourceFile: string
+    codeSource: string
     stereotype?: ClassStereotype
 
     attributes: Attribute[] = []
@@ -390,16 +389,5 @@ export class UmlClass implements ClassProperties {
         }
 
         return dotString
-    }
-
-    get sourceFileFolder(): string {
-        if (!this.sourceFile) {
-            return ''
-        }
-
-        const sourceFolder = dirname(this.sourceFile)
-        const relativeSourceFolder = relative(process.cwd(), sourceFolder)
-
-        return relativeSourceFolder
     }
 }
