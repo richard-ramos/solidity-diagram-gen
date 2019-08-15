@@ -15,10 +15,12 @@ Generates UML diagrams from Solidity source code.
 If no file, folder or address is passes as the first argument, the working folder is used.
 When a folder is used, all *.sol files are found in that folder and all sub folders.
 If an Ethereum address with a 0x prefix is passed, the verified source code from Etherscan will be used.`)
-  .option('-v, --verbose', 'With debugging statements')
-  .option('-f, --outputFormat [value]', 'Output file format: svg, png, dot or all', 'svg')
-  .option('-n, --outputFileName [value]', 'Output file name')
-  .option('-c, --clusterFolders', 'Cluster contracts into source folders')
+  .option('-v, --verbose', 'run with debugging statements')
+  .option('-f, --outputFormat <value>', 'output file format: svg, png, dot or all', 'svg')
+  .option('-o, --outputFileName <value>', 'output file name')
+  .option('-n, --network <network>', 'mainnet, ropsten, kovan, rinkeby or goerli', 'mainnet')
+  .option('-k, --etherscanApiKey <key>', 'Etherscan API Key')
+  .option('-c, --clusterFolders', 'cluster contracts into source folders')
   .parse(process.argv)
 
 if (program.verbose) {
@@ -41,8 +43,10 @@ async function sol2uml() {
   let umlClasses: UmlClass[]
   if (fileFolderAddress.match(/^0x([A-Fa-f0-9]{40})$/)) {
     debug(`argument ${fileFolderAddress} is an Ethereum address so checking Etherscan for the verified source code`)
-    // TODO move api key as an option
-    const etherscanParser = new EtherscanParser('ZAD4UI2RCXCQTP38EXS3UY2MPHFU5H9KB1')
+
+    const etherscanApiKey = program.etherscanApiKey || 'ZAD4UI2RCXCQTP38EXS3UY2MPHFU5H9KB1'
+    const etherscanParser = new EtherscanParser(etherscanApiKey, program.network)
+
     umlClasses = await etherscanParser.getUmlClasses(fileFolderAddress)
   }
   else {

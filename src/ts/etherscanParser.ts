@@ -7,9 +7,20 @@ import { UmlClass } from './umlClass'
 
 export default class EtherscanParser {
 
-    constructor(protected apikey: string, public network: string = 'mainnet') {}
+    readonly url: string
 
-    url = 'https://api.etherscan.io/api'
+    constructor(protected apikey: string, public network: string = 'mainnet') {
+        if (!['mainnet', 'ropsten', 'kovan', 'rinkeby', 'goerli'].includes(network)) {
+            throw new Error(`Invalid network "${network}". Must be either mainnet, ropsten, kovan, rinkeby or goerli`)
+        }
+        else if (network === 'mainnet') {
+            this.url = 'https://api.etherscan.io/api'
+        }
+        else {
+            this.url = `https://api-${network}.etherscan.io/api`
+        }
+    }
+
 
     async getUmlClasses(contractAddress: string): Promise<UmlClass[]> {
 
@@ -52,8 +63,10 @@ export default class EtherscanParser {
                 json: true,
             }, (err, res, body) => {
                 if (err) {
-                    const error = new VError(err, `Failed to ${description}. HTTP code ${res.statusCode} and message: ${res.statusMessage}`)
-                    return reject(error)
+                    if (res) {
+                        return reject(new VError(err, `Failed to ${description}. HTTP code ${res.statusCode} and message: ${res.statusMessage}`))
+                    }
+                    return reject(new VError(err, `Failed to ${description}.`))
                 }
 
                 if (!body) {

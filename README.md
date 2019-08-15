@@ -23,43 +23,51 @@ npm upgrade sol2uml
 To see the usage options
 ```
 $ sol2uml -h
-Usage: sol2uml <fileFolderAddress> [options]
+  Usage: sol2uml <fileFolderAddress> [options]
+  
+  Generates UML diagrams from Solidity source code.
+  If no file, folder or address is passes as the first argument, the working folder is used.
+  When a folder is used, all *.sol files are found in that folder and all sub folders.
+  If an Ethereum address with a 0x prefix is passed, the verified source code from Etherscan will be used.
+  
+  Options:
+    -v, --verbose                 run with debugging statements
+    -f, --outputFormat <value>    output file format: svg, png, dot or all (default: "svg")
+    -o, --outputFileName <value>  output file name
+    -n, --network <network>       mainnet, ropsten, kovan, rinkeby or goerli (default: "mainnet")
+    -k, --etherscanApiKey <key>   Etherscan API Key
+    -c, --clusterFolders          Cluster contracts into source folders
+    -h, --help                    output usage information
 
-Generates UML diagrams from Solidity source code.
-If no file, folder or address is passes as the first argument, the working folder is used.
-When a folder is used, all *.sol files are found in that folder and all sub folders.
-If an Ethereum address with a 0x prefix is passed, the verified source code from Etherscan will be used.
-
-Options:
-  -v, --verbose                 With debugging statements
-  -f, --outputFormat [value]    Output file format: svg, png, dot or all (default: "svg")
-  -n, --outputFileName [value]  Output file name
-  -c, --clusterFolders          Cluster contracts into source folders
-  -h, --help                    output usage information
 ```
 
 To generate a diagram of all contracts under the contracts folder and its sub folders
-```Bash
+```bash
 sol2uml ./contracts
 ```
 
-To generate a diagram of EtherDelta's contract from the [verified source code on Etherscan](https://etherscan.io/address/0x8d12A197cB00D4747a1fe03395095ce2A5CC6819#code). The output wil be a svg file `0x8d12A197cB00D4747a1fe03395095ce2A5CC6819.svg` in the working folder.
-```Bash
+To generate a diagram of EtherDelta's contract from the verified source code on [Etherscan](https://etherscan.io/address/0x8d12A197cB00D4747a1fe03395095ce2A5CC6819#code). The output wil be a svg file `0x8d12A197cB00D4747a1fe03395095ce2A5CC6819.svg` in the working folder.
+```bash
 sol2uml 0x8d12A197cB00D4747a1fe03395095ce2A5CC6819
 ```
 
+To generate a diagram of EtherDelta's contract from the verified source code on [Etherscan Ropsten](https://ropsten.etherscan.io/address/0xa19833bd291b66aB0E17b9C6d46D2Ec5fEC15190#code). The output wil be a svg file `0xa19833bd291b66aB0E17b9C6d46D2Ec5fEC15190.svg` in the working folder.
+```bash
+sol2uml 0xa19833bd291b66aB0E17b9C6d46D2Ec5fEC15190 -n ropsten
+```
+
 To generate all Solidity files under some root folder and output the svg file to a specific location
-```Bash
-sol2uml path/to/contracts/root/folder -n ./outputFile.svg
+```bash
+sol2uml path/to/contracts/root/folder -o ./outputFile.svg
 ```
 
 To generate a diagram of all contracts in a single Solidity file, the output file in png format to output file `./someFile.png`
-```Bash
-sol2uml path/to/contracts/root/folder/solidity/file.sol -f png -n ./someFile.png
+```bash
+sol2uml path/to/contracts/root/folder/solidity/file.sol -f png -o ./someFile.png
 ```
 
 To generate diagrams of all Solidity files under some root folder.  The output will be `contracts.svg` and `contracts.png` files in the working folder.
-```Bash
+```bash
 sol2uml ./contracts -f all -v
 ```
 
