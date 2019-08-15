@@ -2,7 +2,11 @@
 
 ## Crypto Kitties
 ![CryptoKitties](./cryptoKitties.svg)
-Generated from running `sol2uml 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d` which will used the verified sSolidity code loaded to Etherscan https://etherscan.io/address/0x06012c8cf97BEaD5deAe237070F9587f8E7A266d#code
+Generated from running
+```
+sol2uml 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0x06012c8cf97BEaD5deAe237070F9587f8E7A266d#code
 
 ## Open Zeppelin ERC20 Tokens
 ![Open Zeppelin ERC20](./OpenZeppelinERC20.svg)
@@ -18,12 +22,24 @@ Generated from GitHub commit [84c682eeb4e27264503370ef5aafcb9ee3217acb](https://
 
 ## Tether
 ![Tether](./tether.svg)
-Generated from running `sol2uml 0xdAC17F958D2ee523a2206206994597C13D831ec7` which will used the verified sSolidity code loaded to Etherscan https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7#code
+Generated from running
+```
+sol2uml 0xdAC17F958D2ee523a2206206994597C13D831ec7
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0xdac17f958d2ee523a2206206994597c13d831ec7#code
 
 ## 0x
 ![0x Protocol v2 Exchange](./0xv2.svg)
-Generated from running `sol2uml 0x4F833a24e1f95D70F028921e27040Ca56E09AB0b` which will used the verified sSolidity code loaded to Etherscan https://etherscan.io/address/0x4F833a24e1f95D70F028921e27040Ca56E09AB0b#code
+Generated from running
+```
+sol2uml 0x4F833a24e1f95D70F028921e27040Ca56E09AB0b
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0x4F833a24e1f95D70F028921e27040Ca56E09AB0b#code
 
 ## Compound Finance's cDAI
 ![Compound Finance cDAI](./cDAI.svg)
-Generated from running `sol2uml 0xf5dce57282a584d2746faf1593d3121fcac444dc` which will used the verified sSolidity code loaded to Etherscan https://etherscan.io/address/0xf5dce57282a584d2746faf1593d3121fcac444dc#code
+Generated from running
+```
+sol2uml 0xf5dce57282a584d2746faf1593d3121fcac444dc
+```
+This uses the verified Solidity code loaded to Etherscan https://etherscan.io/address/0xf5dce57282a584d2746faf1593d3121fcac444dc#code
