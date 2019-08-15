@@ -13,6 +13,11 @@ To install globally so you can run `sol2uml` from anywhere
 npm link sol2uml --only=production
 ```
 
+To upgrade run
+```bash
+npm upgrade sol2uml
+```
+
 ## Usage
 
 To see the usage options
@@ -38,7 +43,7 @@ To generate a diagram of all contracts under the contracts folder and its sub fo
 sol2uml ./contracts
 ```
 
-To generate a diagram of EtherDelta's contracts from the verified source code on Etherscan. The output wil be a svg file `0x8d12A197cB00D4747a1fe03395095ce2A5CC6819.svg` in the working folder.
+To generate a diagram of EtherDelta's contract from the [verified source code on Etherscan](https://etherscan.io/address/0x8d12A197cB00D4747a1fe03395095ce2A5CC6819#code). The output wil be a svg file `0x8d12A197cB00D4747a1fe03395095ce2A5CC6819.svg` in the working folder.
 ```Bash
 sol2uml 0x8d12A197cB00D4747a1fe03395095ce2A5CC6819
 ```
