@@ -39,6 +39,7 @@ $ sol2uml -h
     -v, --verbose                 run with debugging statements
     -f, --outputFormat <value>    output file format: svg, png, dot or all (default: "svg")
     -o, --outputFileName <value>  output file name
+    -d, --depthLimit <depth>      number of sub folders that will be recursively searched for Solidity files. Default -1 is unlimited (default: -1)
     -n, --network <network>       mainnet, ropsten, kovan, rinkeby or goerli (default: "mainnet")
     -k, --etherscanApiKey <key>   Etherscan API Key
     -c, --clusterFolders          Cluster contracts into source folders
@@ -122,4 +123,4 @@ This is a rewrite of the Richard Ramos's [solidity-diagram-gen](https://github.c
 
 This version uses the [solidity-parser-antlr](https://github.com/federicobond/solidity-parser-antlr) Solidity parser which is built on top of [ANTLR4 grammar](https://github.com/solidityj/solidity-antlr4). The logic to generate the dot syntax has been rewritten and different UML syntax is now used.
 
-The diagrams are generated using [viz.js](https://github.com/mdaines/viz.js/) which uses [Graphviz](http://www.graphviz.org/) to render a [Scalable Vector Graphics (SVG)](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) file. [Graphviz Online](https://dreampuf.github.io/GraphvizOnline/) allows dot files to be edited and rendered into a SVN dynamically.
+The diagrams are generated using [viz.js](https://github.com/mdaines/viz.js/) which uses [Graphviz](http://www.graphviz.org/) to render a [Scalable Vector Graphics (SVG)](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) file. [Graphviz Online](https://dreampuf.github.io/GraphvizOnline/) allows dot files to be edited and rendered into a SVG dynamically.

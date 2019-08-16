@@ -9,9 +9,9 @@ import { UmlClass} from './umlClass'
 
 const debug = require('debug')('sol2uml')
 
-export const parseUmlClassesFromFiles = async(fileOrFolders: string[]): Promise<UmlClass[]> => {
+export const parseUmlClassesFromFiles = async(fileOrFolders: string[], depthLimit:number = -1): Promise<UmlClass[]> => {
 
-    const files = await getSolidityFilesFromFolderOrFiles( fileOrFolders )
+    const files = await getSolidityFilesFromFolderOrFiles(fileOrFolders, depthLimit)
 
     let umlClasses: UmlClass[] = []
 
@@ -28,19 +28,19 @@ export const parseUmlClassesFromFiles = async(fileOrFolders: string[]): Promise<
     return umlClasses
 }
 
-export async function getSolidityFilesFromFolderOrFiles(folderOrFilePaths: string[]): Promise<string[]> {
+export async function getSolidityFilesFromFolderOrFiles(folderOrFilePaths: string[], depthLimit:number = -1): Promise<string[]> {
 
     let files: string[] = []
 
     for (const folderOrFilePath of folderOrFilePaths) {
-        const result = await getSolidityFilesFromFolderOrFile(folderOrFilePath)
+        const result = await getSolidityFilesFromFolderOrFile(folderOrFilePath, depthLimit)
         files = files.concat(result)
     }
 
     return files
 }
 
-export function getSolidityFilesFromFolderOrFile(folderOrFilePath: string): Promise<string[]> {
+export function getSolidityFilesFromFolderOrFile(folderOrFilePath: string, depthLimit:number = -1): Promise<string[]> {
 
     debug(`About to get Solidity files under ${folderOrFilePath}`)
 
@@ -52,7 +52,9 @@ export function getSolidityFilesFromFolderOrFile(folderOrFilePath: string): Prom
 
                 const files: string[] = []
 
-                klaw(folderOrFilePath)
+                klaw(folderOrFilePath, {
+                    depthLimit,
+                })
                     .on('data', file => {
                         if (extname(file.path) === '.sol')
                             files.push(file.path)

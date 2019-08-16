@@ -18,6 +18,7 @@ If an Ethereum address with a 0x prefix is passed, the verified source code from
   .option('-v, --verbose', 'run with debugging statements')
   .option('-f, --outputFormat <value>', 'output file format: svg, png, dot or all', 'svg')
   .option('-o, --outputFileName <value>', 'output file name')
+  .option('-d, --depthLimit <depth>', 'number of sub folders that will be recursively searched for Solidity files. Default -1 is unlimited', -1)
   .option('-n, --network <network>', 'mainnet, ropsten, kovan, rinkeby or goerli', 'mainnet')
   .option('-k, --etherscanApiKey <key>', 'Etherscan API Key')
   .option('-c, --clusterFolders', 'cluster contracts into source folders')
@@ -50,7 +51,13 @@ async function sol2uml() {
     umlClasses = await etherscanParser.getUmlClasses(fileFolderAddress)
   }
   else {
-    umlClasses = await parseUmlClassesFromFiles([fileFolderAddress])
+    const depthLimit = parseInt(program.depthLimit)
+    if (isNaN(depthLimit)) {
+      console.error(`depthLimit option must be an integer. Not ${program.depthLimit}`)
+      process.exit(1)
+    }
+
+    umlClasses = await parseUmlClassesFromFiles([fileFolderAddress], depthLimit)
   }
 
   convertUmlClasses(umlClasses, fileFolderAddress, program.outputFormat, program.outputFileName, program.clusterFolders).then(() => {
@@ -58,4 +65,9 @@ async function sol2uml() {
   })
 }
 
-sol2uml()
+try {
+  sol2uml()
+}
+catch (err) {
+  console.error(`Failed to generate UML diagram ${err.message}`)
+}

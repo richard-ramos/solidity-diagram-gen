@@ -1,7 +1,7 @@
 
 const debug = require('debug')('sol2uml')
 
-import { writeFile } from 'fs'
+import { lstatSync, writeFile } from 'fs'
 import { Association, ClassStereotype, ReferenceType, UmlClass} from './umlClass'
 import { VError } from 'verror'
 
@@ -28,15 +28,22 @@ export const convertUmlClasses = async(
     }
 
     if (!outputFilename) {
-        // If all output then extension is svn
+        // If all output then extension is svg
         const outputExt = outputFormat === 'all' ? 'svg' : outputFormat
+
+        // if outputBaseName is a folder
+        const folderOrFile = lstatSync(outputBaseName)
+        if(folderOrFile.isDirectory() ) {
+            const parsedDir = path.parse(process.cwd())
+            outputBaseName = path.join(process.cwd(), parsedDir.name)
+        }
         outputFilename = outputBaseName + '.' + outputExt
     }
 
     const svg = convertDot2Svg(dot)
 
     // write svg file even if only wanting png file as we convertUmlClasses svg files to png
-    writeSVG(svg, outputFilename, outputFormat)
+    await writeSVG(svg, outputFilename, outputFormat)
 
     if (outputFormat === 'png' || outputFormat === 'all') {
         await writePng(svg, outputFilename)
@@ -179,12 +186,12 @@ export function writeDot(dot: string, dotFilename = 'classDiagram.dot') {
         if (err) {
             throw new VError(err, `Failed to write Dot file to ${dotFilename}`)
         } else {
-            debug(`Dot file written to ${dotFilename}`)
+            console.log(`Dot file written to ${dotFilename}`)
         }
     })
 }
 
-export function writeSVG(svg: any, svgFilename = 'classDiagram.svn', outputFormats: OutputFormats = 'png') {
+export function writeSVG(svg: any, svgFilename = 'classDiagram.svg', outputFormats: OutputFormats = 'png'): Promise<void> {
 
     debug(`About to write SVN file to ${svgFilename}`)
 
@@ -198,33 +205,35 @@ export function writeSVG(svg: any, svgFilename = 'classDiagram.svn', outputForma
         }
     }
 
-    writeFile(svgFilename, svg, err => {
-        if (err) {
-            throw new VError(err, `Failed to write SVG file to ${svgFilename}`)
-        } else {
-            debug(`Generated SVG file ${svgFilename}`)
-        }
+    return new Promise<void>((resolve, reject) => {
+        writeFile(svgFilename, svg, err => {
+            if (err) {
+                reject(new VError(err, `Failed to write SVG file to ${svgFilename}`))
+            } else {
+                console.log(`Generated svg file ${svgFilename}`)
+                resolve()
+            }
+        })
     })
 }
 
-export async function writePng(svg: any, pngFilename = 'classDiagram.png'): Promise<void> {
+export async function writePng(svg: any, filename: string): Promise<void> {
 
     // get svg file name from png file name
-    const parsedPngFile = path.parse(pngFilename)
+    const parsedPngFile = path.parse(filename)
     const svgFilename = parsedPngFile.dir + '/' + parsedPngFile.name + '.svg'
-    const svgInput = path.resolve(path.join( process.cwd(), svgFilename ))
+    const pngDir = path.resolve(parsedPngFile.dir)
+    const pngFilename = pngDir + '/' + parsedPngFile.name + '.png'
 
-    // get full path to folder of png output file
-    const outputFolder = path.join( process.cwd(), path.dirname(pngFilename))
 
-    debug(`About to convert svg file ${svgInput} to png file ${pngFilename}`)
+    debug(`About to convert svg file ${svgFilename} to png file ${pngFilename}`)
 
     try {
-        await svg_to_png.convert([svgInput], outputFolder)
+        await svg_to_png.convert(path.resolve(svgFilename), pngDir)
     }
     catch (err) {
-        throw new VError(err, `Failed to convert SVG file ${svgInput} to PNG file ${pngFilename}`)
+        throw new VError(err, `Failed to convert SVG file ${svgFilename} to PNG file ${pngFilename}`)
     }
 
-    debug(`Generated png file ${pngFilename}`)
+    console.log(`Generated png file ${pngFilename}`)
 }
