@@ -5,13 +5,16 @@ import { VError} from 'verror'
 import { convertNodeToUmlClass } from './parser'
 import { UmlClass } from './umlClass'
 
+const networks = <const> ['mainnet', 'ropsten', 'kovan', 'rinkeby', 'goerli']
+type Network = typeof networks[number];
+
 export default class EtherscanParser {
 
     readonly url: string
 
-    constructor(protected apikey: string, public network: string = 'mainnet') {
-        if (!['mainnet', 'ropsten', 'kovan', 'rinkeby', 'goerli'].includes(network)) {
-            throw new Error(`Invalid network "${network}". Must be either mainnet, ropsten, kovan, rinkeby or goerli`)
+    constructor(protected apikey: string, public network: Network = 'mainnet') {
+        if (!networks.includes(network)) {
+            throw new Error(`Invalid network "${network}". Must be one of ${networks}`)
         }
         else if (network === 'mainnet') {
             this.url = 'https://api.etherscan.io/api'
@@ -21,7 +24,11 @@ export default class EtherscanParser {
         }
     }
 
-
+    /**
+     * Parses the verified source code files from Etherscan
+     * @param contractAddress Ethereum contract address with a 0x prefix
+     * @return Promise with an array of UmlClass objects
+     */
     async getUmlClasses(contractAddress: string): Promise<UmlClass[]> {
 
         const sourceFiles = await this.getSourceCode(contractAddress)
@@ -29,7 +36,7 @@ export default class EtherscanParser {
         let umlClasses: UmlClass[] = []
 
         for (const sourceFile of sourceFiles) {
-            const node = await this.parseSourceFile(sourceFile)
+            const node = await this.parseSourceCode(sourceFile)
             const umlClass = convertNodeToUmlClass(node, contractAddress)
             umlClasses = umlClasses.concat(umlClass)
         }
@@ -37,7 +44,12 @@ export default class EtherscanParser {
         return umlClasses
     }
 
-    async parseSourceFile(sourceCode: string): Promise<ASTNode> {
+    /**
+     * Parses Solidity source code into an ASTNode object
+     * @param sourceCode Solidity source code
+     * @return Promise with an ASTNode object from solidity-parser-antlr
+     */
+    async parseSourceCode(sourceCode: string): Promise<ASTNode> {
         try {
             const node = parse(sourceCode, {})
 
@@ -48,6 +60,10 @@ export default class EtherscanParser {
         }
     }
 
+    /**
+     * Calls Etherscan to get the verified source code for the specified contract address
+     * @param contractAddress Ethereum contract address with a 0x prefix
+     */
     getSourceCode(contractAddress: string): Promise<string[]> {
 
         const description =  `get verified source code for address ${contractAddress} from Etherscan API.`
