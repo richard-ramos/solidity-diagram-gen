@@ -4,6 +4,11 @@
 
 [Unified Modeling Language (UML)](https://en.wikipedia.org/wiki/Unified_Modeling_Language) [class diagram](https://en.wikipedia.org/wiki/Class_diagram) generator for [Solidity](https://solidity.readthedocs.io/) contracts.
 
+Open Zeppelin's ERC20 token contracts generated from [version 2.3.0](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.3.0/contracts/token/ERC20)
+![Open Zeppelin ERC20](./examples/OpenZeppelinERC20.svg)
+
+See [examples](./examples/README.md) for more diagrams.
+
 ## Install
 
 The following installation assumes [Node.js](https://nodejs.org/en/download/) has already been installed which comes with [Node Package Manager (NPM)](https://www.npmjs.com/).
@@ -71,14 +76,6 @@ To generate diagrams of all Solidity files under some root folder.  The output w
 sol2uml ./contracts -f all -v
 ```
 
-## Example from Open Zeppelin
-
-Open Zeppelin's ERC20 token contracts
-![Open Zeppelin ERC20](./examples/OpenZeppelinERC20.svg)
-[Generated from version 2.3.0](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.3.0/contracts/token/ERC20)
-
-See [examples](./examples/README.md) for more diagrams.
-
 ## UML Syntax
 
 Good online resources for learning UML
@@ -126,11 +123,3 @@ This is a rewrite of the Richard Ramos's [solidity-diagram-gen](https://github.c
 This version uses the [solidity-parser-antlr](https://github.com/federicobond/solidity-parser-antlr) Solidity parser which is built on top of [ANTLR4 grammar](https://github.com/solidityj/solidity-antlr4). The logic to generate the dot syntax has been rewritten and different UML syntax is now used.
 
 The diagrams are generated using [viz.js](https://github.com/mdaines/viz.js/) which uses [Graphviz](http://www.graphviz.org/) to render a [Scalable Vector Graphics (SVG)](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) file. [Graphviz Online](https://dreampuf.github.io/GraphvizOnline/) allows dot files to be edited and rendered into a SVN dynamically.
-
-## TODO
-
-* Document UML syntax
-* Option to specify a list of contracts to generate along with their dependencies. This was not all contracts in dependent libraries like Open Zeppelin need to be generated.
-* Portrait output mode
-* Add indicator for state mutability. eg view and pure functions
-
