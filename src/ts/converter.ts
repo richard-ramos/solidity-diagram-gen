@@ -32,11 +32,15 @@ export const convertUmlClasses = async(
         const outputExt = outputFormat === 'all' ? 'svg' : outputFormat
 
         // if outputBaseName is a folder
-        const folderOrFile = lstatSync(outputBaseName)
-        if(folderOrFile.isDirectory() ) {
-            const parsedDir = path.parse(process.cwd())
-            outputBaseName = path.join(process.cwd(), parsedDir.name)
+        try {
+            const folderOrFile = lstatSync(outputBaseName)
+            if(folderOrFile.isDirectory() ) {
+                const parsedDir = path.parse(process.cwd())
+                outputBaseName = path.join(process.cwd(), parsedDir.name)
+            }
         }
+        catch (err) {}  // we can ignore errors as it just means outputBaseName is not a folder
+
         outputFilename = outputBaseName + '.' + outputExt
     }
 
@@ -221,8 +225,8 @@ export async function writePng(svg: any, filename: string): Promise<void> {
 
     // get svg file name from png file name
     const parsedPngFile = path.parse(filename)
-    const svgFilename = parsedPngFile.dir + '/' + parsedPngFile.name + '.svg'
-    const pngDir = path.resolve(parsedPngFile.dir)
+    const pngDir = (parsedPngFile.dir === "")? '.' : path.resolve(parsedPngFile.dir)
+    const svgFilename = pngDir + '/' + parsedPngFile.name + '.svg'
     const pngFilename = pngDir + '/' + parsedPngFile.name + '.png'
 
 
