@@ -116,6 +116,12 @@ contract BodyConcrete {
     uint256 public someNumber = 56;
 }
 
+library VariableDeclarationLibrary {
+    function max(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a >= b ? a : b;
+    }
+}
+
 contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
 
     uint256 public someInt;
@@ -189,6 +195,9 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
             }
 
             BodyConcrete(bodyConcreteAddress);
+
+            uint256 varRef = VariableDeclarationLibrary.max(1,2);
+            require(varRef > 10, 'Testing associations of varible declaration');
     }
 
     using BigInt for BigInt.bigint;

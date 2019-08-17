@@ -25,10 +25,15 @@ describe('Etherscan', () => {
 
     test('Try and get UML Classes when address does not have verified source code', async() => {
 
+        expect.assertions(1)
+
         const etherscan = new EtherscanParser('HPD85TXCG1HW3N5G6JJXK1A7EE5K86CYBJ')
 
-        const umlClasses = await etherscan.getUmlClasses('0x0000000000000000000000000000000000000001')
-
-        expect(umlClasses).toHaveLength(0)
+        try {
+            await etherscan.getUmlClasses('0x0000000000000000000000000000000000000001')
+        }
+        catch (err) {
+            expect(err.message).toMatch(/Failed to get verified source code for address 0x0000000000000000000000000000000000000001 from Etherscan API/)
+        }
     })
 })

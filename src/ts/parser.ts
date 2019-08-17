@@ -256,20 +256,28 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
             case 'StateVariableDeclaration':
             case 'VariableDeclarationStatement':
                 umlClass = addAssociations(node.variables, umlClass)
+                umlClass = parseExpression(node.initialValue, umlClass)
                 break
             case 'ForStatement':
+                // @ts-ignore type of body is a Block and not a Statement
+                umlClass = addAssociations(node.body.statements, umlClass)
+                umlClass = parseExpression(node.conditionExpression, umlClass)
+                umlClass = parseExpression(node.loopExpression.expression, umlClass)
+                break
             case 'WhileStatement':
+                // @ts-ignore type of body is a Block and not a Statement
+                umlClass = addAssociations(node.body.statements, umlClass)
+                break
             case 'DoWhileStatement':
                 // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
-
+                umlClass = parseExpression(node.condition, umlClass)
                 break
+            case 'ReturnStatement':
             case 'ExpressionStatement':
                 umlClass = parseExpression(node.expression, umlClass)
-
                 break
             case 'IfStatement':
-
                 // @ts-ignore type Statement can be a Block
                 if (node.trueBody && node.trueBody.statements) {
                     // @ts-ignore
@@ -282,6 +290,7 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                     umlClass = addAssociations(node.falseBody.statements, umlClass)
                 }
 
+                umlClass = parseExpression(node.condition, umlClass)
                 break
             default:
                 break
@@ -292,6 +301,9 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
 }
 
 function parseExpression(expression: Expression, umlClass: UmlClass): UmlClass {
+    if (!expression || !expression.type) {
+        return umlClass
+    }
     if (expression.type === 'BinaryOperation') {
         umlClass = parseExpression(expression.left, umlClass)
         umlClass = parseExpression(expression.right, umlClass)
