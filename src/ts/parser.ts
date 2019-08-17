@@ -1,6 +1,12 @@
-
-import { ASTNode, ContractDefinition, ParameterList, TypeName, VariableDeclaration } from 'solidity-parser-antlr'
-import { ClassStereotype, OperatorStereotype, Parameter, ReferenceType, UmlClass, Visibility } from './umlClass'
+import {
+    ASTNode,
+    ContractDefinition,
+    Expression,
+    ParameterList,
+    TypeName,
+    VariableDeclaration
+} from 'solidity-parser-antlr'
+import {ClassStereotype, OperatorStereotype, Parameter, ReferenceType, UmlClass, Visibility} from './umlClass'
 
 const debug = require('debug')('sol2uml')
 
@@ -258,6 +264,10 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                 umlClass = addAssociations(node.body.statements, umlClass)
 
                 break
+            case 'ExpressionStatement':
+                umlClass = parseExpression(node.expression, umlClass)
+
+                break
             case 'IfStatement':
 
                 // @ts-ignore type Statement can be a Block
@@ -276,6 +286,43 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
             default:
                 break
         }
+    }
+
+    return umlClass
+}
+
+function parseExpression(expression: Expression, umlClass: UmlClass): UmlClass {
+    if (expression.type === 'BinaryOperation') {
+        umlClass = parseExpression(expression.left, umlClass)
+        umlClass = parseExpression(expression.right, umlClass)
+    }
+    else if (expression.type === 'FunctionCall') {
+        umlClass = parseExpression(expression.expression, umlClass)
+        expression.arguments.forEach(arg => {
+            umlClass = parseExpression(arg, umlClass)
+        })
+    }
+    else if (expression.type === 'IndexAccess') {
+        umlClass = parseExpression(expression.base, umlClass)
+        umlClass = parseExpression(expression.index, umlClass)
+    }
+    else if (expression.type === 'TupleExpression') {
+        expression.components.forEach(component => {
+            umlClass = parseExpression(component, umlClass)
+        })
+    }
+    else if (expression.type === 'MemberAccess') {
+        umlClass = parseExpression(expression.expression, umlClass)
+    }
+    else if (expression.type === 'Conditional') {
+        umlClass = addAssociations([expression.trueExpression], umlClass)
+        umlClass = addAssociations([expression.falseExpression], umlClass)
+    }
+    else if (expression.type === 'Identifier') {
+        umlClass.addAssociation({
+            referenceType: ReferenceType.Memory,
+            targetUmlClassName: expression.name,
+        })
     }
 
     return umlClass

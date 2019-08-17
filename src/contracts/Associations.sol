@@ -112,6 +112,10 @@ contract IfFalseConcrete {
     uint256 public someNumber = 55;
 }
 
+contract BodyConcrete {
+    uint256 public someNumber = 56;
+}
+
 contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
 
     uint256 public someInt;
@@ -153,7 +157,8 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
     function someFunction(
         FunctionParamAssoc paramAssoc,
         FunctionParamAbstract paramAbstract,
-        FunctionParamInterface paramInterface) public
+        FunctionParamInterface paramInterface,
+        address bodyConcreteAddress) public
         returns (FunctionReturnParamAssoc returnParamAssoc) {
             someInt = 22;
 
@@ -182,6 +187,8 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
                 }
                 while(counter < 200);
             }
+
+            BodyConcrete(bodyConcreteAddress);
     }
 
     using BigInt for BigInt.bigint;

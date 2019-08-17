@@ -135,9 +135,6 @@ export function addAssociationsToDot(umlClasses: UmlClass[]): string {
             if (targetUmlClass) {
                 dotString += addAssociationToDot(sourceUmlClass, targetUmlClass, association)
             }
-            else {
-                debug(`Warning - could not find target id for Uml Class with name ${association.targetUmlClassName} and stereotype ${association.targetUmlClassStereotype}`)
-            }
         }
     }
 
