@@ -282,7 +282,7 @@ export class UmlClass implements ClassProperties {
 
             dotString += UmlClass.dotParameters(operator.parameters)
 
-            if (operator.returnParameters) {
+            if (operator.returnParameters && operator.returnParameters.length > 0 ) {
                 dotString += ': ' + UmlClass.dotParameters(operator.returnParameters)
             }
 
@@ -332,13 +332,17 @@ export class UmlClass implements ClassProperties {
         let paramCount = 0
 
         for (const parameter of parameters) {
-            // If not the last parameter
-            if (++paramCount < parameters.length) {
-                dotString += parameter.name + ': ' + parameter.type + ', '
+            // The parameter name can be null in return parameters
+            if (parameter.name === null) {
+                dotString += parameter.type
             }
             else {
-                // last parameter
                 dotString += parameter.name + ': ' + parameter.type
+            }
+
+            // If not the last parameter
+            if (++paramCount < parameters.length) {
+                dotString += ', '
             }
         }
 
