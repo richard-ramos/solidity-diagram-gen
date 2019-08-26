@@ -8,7 +8,7 @@ import { UmlClass } from './umlClass'
 const networks = <const> ['mainnet', 'ropsten', 'kovan', 'rinkeby', 'goerli']
 type Network = typeof networks[number]
 
-export default class EtherscanParser {
+export class EtherscanParser {
 
     readonly url: string
 

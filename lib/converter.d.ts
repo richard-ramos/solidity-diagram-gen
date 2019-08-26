@@ -1,6 +1,7 @@
 import { UmlClass } from './umlClass';
 export declare type OutputFormats = 'svg' | 'png' | 'dot' | 'all';
-export declare const convertUmlClasses: (umlClasses: UmlClass[], outputBaseName: string, outputFormat?: OutputFormats, outputFilename?: string, clusterFolders?: boolean) => Promise<void>;
+export declare const generateFilesFromUmlClasses: (umlClasses: UmlClass[], outputBaseName: string, outputFormat?: OutputFormats, outputFilename?: string, clusterFolders?: boolean) => Promise<void>;
+export declare const convertUmlClassesToSvg: (umlClasses: UmlClass[], clusterFolders?: boolean) => Promise<string>;
 export declare function convertUmlClasses2Dot(umlClasses: UmlClass[], clusterFolders?: boolean): string;
 export declare function addAssociationsToDot(umlClasses: UmlClass[]): string;
 export declare function convertDot2Svg(dot: string): any;

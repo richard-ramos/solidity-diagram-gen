@@ -1,5 +1,5 @@
 
-import EtherscanParser from '../etherscanParser'
+import { EtherscanParser } from '../index'
 
 const etherDelta = '0x8d12A197cB00D4747a1fe03395095ce2A5CC6819'
 

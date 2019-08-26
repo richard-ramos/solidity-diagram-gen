@@ -11,7 +11,7 @@ const svg_to_png = require('svg-to-png')
 
 export type OutputFormats = 'svg' | 'png' | 'dot' | 'all'
 
-export const convertUmlClasses = async(
+export const generateFilesFromUmlClasses = async(
     umlClasses: UmlClass[],
     outputBaseName: string,
     outputFormat: OutputFormats = 'svg',
@@ -46,12 +46,21 @@ export const convertUmlClasses = async(
 
     const svg = convertDot2Svg(dot)
 
-    // write svg file even if only wanting png file as we convertUmlClasses svg files to png
+    // write svg file even if only wanting png file as we generateFilesFromUmlClasses svg files to png
     await writeSVG(svg, outputFilename, outputFormat)
 
     if (outputFormat === 'png' || outputFormat === 'all') {
         await writePng(svg, outputFilename)
     }
+}
+
+export const convertUmlClassesToSvg = async(
+  umlClasses: UmlClass[],
+  clusterFolders: boolean = false): Promise<string> => {
+
+    const dot = convertUmlClasses2Dot(umlClasses, clusterFolders)
+
+    return convertDot2Svg(dot)
 }
 
 export function convertUmlClasses2Dot(umlClasses: UmlClass[], clusterFolders: boolean = false): string {

@@ -2,7 +2,7 @@ import { ASTNode } from 'solidity-parser-antlr';
 import { UmlClass } from './umlClass';
 declare const networks: readonly ["mainnet", "ropsten", "kovan", "rinkeby", "goerli"];
 declare type Network = typeof networks[number];
-export default class EtherscanParser {
+export declare class EtherscanParser {
     protected apikey: string;
     network: Network;
     readonly url: string;

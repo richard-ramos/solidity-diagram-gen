@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import EtherscanParser from './etherscanParser'
+import { EtherscanParser } from './etherscanParser'
 import { parseUmlClassesFromFiles } from './fileParser'
 import { UmlClass} from './umlClass'
 
@@ -29,7 +29,7 @@ if (program.verbose) {
 }
 
 // This function needs to be loaded after the DEBUG env variable has been set
-import { convertUmlClasses } from './converter'
+import { generateFilesFromUmlClasses } from './converter'
 
 async function sol2uml() {
 
@@ -60,7 +60,7 @@ async function sol2uml() {
     umlClasses = await parseUmlClassesFromFiles([fileFolderAddress], depthLimit)
   }
 
-  convertUmlClasses(umlClasses, fileFolderAddress, program.outputFormat, program.outputFileName, program.clusterFolders).then(() => {
+  generateFilesFromUmlClasses(umlClasses, fileFolderAddress, program.outputFormat, program.outputFileName, program.clusterFolders).then(() => {
     debug(`Finished`)
   })
 }

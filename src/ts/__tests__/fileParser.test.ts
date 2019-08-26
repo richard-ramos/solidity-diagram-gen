@@ -1,5 +1,5 @@
 
-import { getSolidityFilesFromFolderOrFile } from '../fileParser'
+import { getSolidityFilesFromFolderOrFile } from '../index'
 
 describe('Parser', () => {
 
