@@ -9,7 +9,7 @@ Open Zeppelin's ERC20 token contracts generated from [version 2.3.0](https://git
 
 See [examples](./examples/README.md) for more diagrams.
 
-## Install
+# Install
 
 The following installation assumes [Node.js](https://nodejs.org/en/download/) has already been installed which comes with [Node Package Manager (NPM)](https://www.npmjs.com/).
 
@@ -23,7 +23,9 @@ To upgrade run
 npm upgrade sol2uml
 ```
 
-## Usage
+# Usage
+
+## Command Line Interface (CLI)
 
 To see the usage options
 ```
@@ -77,25 +79,47 @@ To generate diagrams of all Solidity files under some root folder.  The output w
 sol2uml ./contracts -f all -v
 ```
 
-## UML Syntax
+## Application Programming Interface (API)
+
+The main function that parses Solidity source code from files or files in folders is `parseUmlClassesFromFiles`. This returns an array of UML class objects.
+ 
+`EtherscanParser` is a class that parses Etherscan's verified Solidity source code for a contract. For example
+```ts
+import { convertUmlClassesToSvg, EtherscanParser } from 'sol2uml'
+
+async function generateSvg() {
+  const etherscanParser = new EtherscanParser()
+
+  // get the verified source code from Etherscan for the contract address and
+  // parse Solidity into UML class objects
+  const umlClasses = await etherscanParser.getUmlClasses('0xf5dce57282a584d2746faf1593d3121fcac444dc')
+
+  // Convert UML classes to a svg string
+  const svg = await convertUmlClassesToSvg(umlClasses)
+}
+```
+
+`generateFilesFromUmlClasses` is used to write the dot, svg and png files from an array of UML class objects.
+
+# UML Syntax
 
 Good online resources for learning UML
 * [UML 2 Class Diagramming Guidelines](http://www.agilemodeling.com/style/classDiagram.htm)
 * [Creating class diagrams with UML](https://www.ionos.com/digitalguide/websites/web-development/class-diagrams-with-uml/)
 
-### Terminology differences
+## Terminology differences
 
 A Solidity variable becomes an attribute in UML and a Solidity function becomes an operation in UML.
 
-### Stereotypes
+## Stereotypes
 
-#### Class stereotypes
+### Class stereotypes
 
 * Interface
 * Abstract - if any of the contract's functions are abstract, the class will have an Abstract stereotype. Child contracts of abstract contracts that do not implement all the abstract functions are currently not marked as Abstract.
 * Library
 
-#### Operator stereotypes
+### Operator stereotypes
 
 * event
 * modifier
@@ -103,7 +127,7 @@ A Solidity variable becomes an attribute in UML and a Solidity function becomes 
 * fallback - abstract fallback functions will just have an abstract stereotype.
 * payable - payable fallback functions will just have a fallback stereotype.
 
-### UML Associations
+## UML Associations
 
 Lines:
 - Solid lines are used to link the contract types of storage (state) variables. This can be linked to contracts, interfaces or libraries.
@@ -117,7 +141,7 @@ Heads/Tails:
 - An open arrow head is used for storage or memory variable dependencies
 - A diamond tail is used for aggregations of structs and enums
 
-## About
+# About
 
 This is a rewrite of the Richard Ramos's [solidity-diagram-gen](https://github.com/richard-ramos/solidity-diagram-gen) tool which no longer works as it uses [solidity-parser](https://www.npmjs.com/package/solidity-parser/v/0.4.0) which cannot handle newer Solidity syntax like `constructor`.
 
