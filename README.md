@@ -81,9 +81,9 @@ sol2uml ./contracts -f all -v
 
 ## Application Programming Interface (API)
 
-The main function that parses Solidity source code from files or files in folders is `parseUmlClassesFromFiles`. This returns an array of UML class objects.
+The main function that parses Solidity source code from files or files in folders is [parseUmlClassesFromFiles](./lib/fileParser.d.ts#L3). This returns an array of UML class objects.
  
-`EtherscanParser` is a class that parses Etherscan's verified Solidity source code for a contract. For example
+[EtherscanParser](./lib/etherscanParser.d.ts#L5) is a class that parses Etherscan's verified Solidity source code for a contract. For example
 ```ts
 import { convertUmlClassesToSvg, EtherscanParser } from 'sol2uml'
 
@@ -99,7 +99,7 @@ async function generateSvg() {
 }
 ```
 
-`generateFilesFromUmlClasses` is used to write the dot, svg and png files from an array of UML class objects.
+[generateFilesFromUmlClasses](./lib/converter.d.ts#L3) is used to write the dot, svg and png files from an array of UML class objects.
 
 # UML Syntax
 
