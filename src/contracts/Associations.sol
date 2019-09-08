@@ -116,6 +116,14 @@ contract BodyConcrete {
     uint256 public someNumber = 56;
 }
 
+contract NewConcrete {
+    uint256 public someNumber = 57;
+}
+
+contract NewAddressConcrete {
+    uint256 public someNumber = 58;
+}
+
 library VariableDeclarationLibrary {
     function max(uint256 a, uint256 b) internal pure returns (uint256) {
         return a >= b ? a : b;
@@ -167,6 +175,9 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
         address bodyConcreteAddress) public
         returns (FunctionReturnParamAssoc returnParamAssoc) {
             someInt = 22;
+
+            NewConcrete newConcrete = new NewConcrete();
+            address newAddressConcrete = new NewAddressConcrete();
 
             uint256 counter = 0;
             for (uint i = 0; i < someIntArray.length; i++) {

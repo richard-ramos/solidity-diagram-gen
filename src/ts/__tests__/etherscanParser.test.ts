@@ -1,6 +1,8 @@
 
 import { EtherscanParser } from '../index'
 
+jest.setTimeout(20000); // timeout for each test in milliseconds
+
 const etherDelta = '0x8d12A197cB00D4747a1fe03395095ce2A5CC6819'
 
 describe('Etherscan', () => {
