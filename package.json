@@ -7,7 +7,8 @@
   "scripts": {
     "buildSol": "cd ./src/contracts && solc *",
     "build": "tsc --build ./tsconfig.json",
-    "clean": "tsc --build --clean ./tsconfig.json"
+    "clean": "tsc --build --clean ./tsconfig.json",
+    "test": "jest"
   },
   "preferGlobal": true,
   "contributors": [

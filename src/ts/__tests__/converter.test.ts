@@ -52,16 +52,16 @@ describe('Converter', () => {
           "<!-- 1 -->\n" +
           "<g id=\"node1\" class=\"node\">\n" +
           "<title>1</title>\n" +
-          "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"654.0064,-733.5 654.0064,-875.1 847.6986,-875.1 847.6986,-733.5 654.0064,-733.5\"/>\n" +
-          "<text text-anchor=\"middle\" x=\"750.8525\" y=\"-858.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">SafeMath</text>\n" +
-          "<polyline fill=\"none\" stroke=\"#000000\" points=\"654.0064,-850.3 847.6986,-850.3 \"/>\n" +
-          "<text text-anchor=\"middle\" x=\"750.8525\" y=\"-833.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> </text>\n" +
-          "<polyline fill=\"none\" stroke=\"#000000\" points=\"654.0064,-825.5 847.6986,-825.5 \"/>\n" +
-          "<text text-anchor=\"start\" x=\"662.0064\" y=\"-808.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">Internal:</text>\n" +
-          "<text text-anchor=\"start\" x=\"662.0064\" y=\"-792.1\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeMul(a: uint, b: uint): uint</text>\n" +
-          "<text text-anchor=\"start\" x=\"662.0064\" y=\"-775.3\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeSub(a: uint, b: uint): uint</text>\n" +
-          "<text text-anchor=\"start\" x=\"662.0064\" y=\"-758.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeAdd(a: uint, b: uint): uint</text>\n" +
-          "<text text-anchor=\"start\" x=\"662.0064\" y=\"-741.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;assert(assertion: bool)</text>\n" +
+          "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"533.0064,-733.5 533.0064,-875.1 726.6986,-875.1 726.6986,-733.5 533.0064,-733.5\"/>\n" +
+          "<text text-anchor=\"middle\" x=\"629.8525\" y=\"-858.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">SafeMath</text>\n" +
+          "<polyline fill=\"none\" stroke=\"#000000\" points=\"533.0064,-850.3 726.6986,-850.3 \"/>\n" +
+          "<text text-anchor=\"middle\" x=\"629.8525\" y=\"-833.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> </text>\n" +
+          "<polyline fill=\"none\" stroke=\"#000000\" points=\"533.0064,-825.5 726.6986,-825.5 \"/>\n" +
+          "<text text-anchor=\"start\" x=\"541.0064\" y=\"-808.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">Internal:</text>\n" +
+          "<text text-anchor=\"start\" x=\"541.0064\" y=\"-792.1\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeMul(a: uint, b: uint): uint</text>\n" +
+          "<text text-anchor=\"start\" x=\"541.0064\" y=\"-775.3\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeSub(a: uint, b: uint): uint</text>\n" +
+          "<text text-anchor=\"start\" x=\"541.0064\" y=\"-758.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeAdd(a: uint, b: uint): uint</text>\n" +
+          "<text text-anchor=\"start\" x=\"541.0064\" y=\"-741.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;assert(assertion: bool)</text>\n" +
           "</g>\n" +
           "<!-- 2 -->\n" +
           "<g id=\"node2\" class=\"node\">\n" +
@@ -124,8 +124,8 @@ describe('Converter', () => {
           "<!-- 4&#45;&gt;1 -->\n" +
           "<g id=\"edge3\" class=\"edge\">\n" +
           "<title>4&#45;&gt;1</title>\n" +
-          "<path fill=\"none\" stroke=\"#000000\" d=\"M239.1102,-402.5002C254.5232,-477.041 289.1827,-593.1299 362.8525,-663.4 397.6391,-696.5813 419.6181,-683.1225 464.8525,-699.4 517.5794,-718.3736 575.6528,-739.611 625.6148,-757.988\"/>\n" +
-          "<polygon fill=\"none\" stroke=\"#000000\" points=\"622.2124,-767.9243 653.9927,-768.4389 629.4697,-748.2182 622.2124,-767.9243\"/>\n" +
+          "<path fill=\"none\" stroke=\"#000000\" d=\"M239.1102,-402.5002C254.5232,-477.041 289.1827,-593.1299 362.8525,-663.4 397.6391,-696.5813 421.623,-678.3685 464.8525,-699.4 478.7988,-706.185 493.0228,-713.8895 506.9811,-721.9691\"/>\n" +
+          "<polygon fill=\"none\" stroke=\"#000000\" points=\"501.8104,-731.1119 532.933,-737.5646 512.6272,-713.112 501.8104,-731.1119\"/>\n" +
           "</g>\n" +
           "<!-- 4&#45;&gt;3 -->\n" +
           "<g id=\"edge2\" class=\"edge\">\n" +
@@ -211,11 +211,17 @@ describe('Converter', () => {
           "<!-- 7&#45;&gt;1 -->\n" +
           "<g id=\"edge5\" class=\"edge\">\n" +
           "<title>7&#45;&gt;1</title>\n" +
-          "<path fill=\"none\" stroke=\"#000000\" d=\"M804.3159,-663.1446C798.7749,-677.7743 793.455,-691.8199 788.464,-704.9972\"/>\n" +
-          "<polygon fill=\"none\" stroke=\"#000000\" points=\"778.5959,-701.4071 777.7891,-733.1814 798.2345,-708.8454 778.5959,-701.4071\"/>\n" +
+          "<path fill=\"none\" stroke=\"#000000\" d=\"M719.456,-663.1446C709.5332,-678.7763 700.0337,-693.7412 691.1776,-707.6926\"/>\n" +
+          "<polygon fill=\"none\" stroke=\"#000000\" points=\"682.2107,-702.2262 674.9976,-733.1814 699.9403,-713.4807 682.2107,-702.2262\"/>\n" +
+          "</g>\n" +
+          "<!-- 7&#45;&gt;2 -->\n" +
+          "<g id=\"edge6\" class=\"edge\">\n" +
+          "<title>7&#45;&gt;2</title>\n" +
+          "<path fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,2\" d=\"M876.2057,-663.2166C847.5088,-752.8093 803.4615,-843.1341 735.8525,-909.2 695.4607,-948.6699 577.7051,-986.4223 465.7305,-1015.0886\"/>\n" +
+          "<polygon fill=\"#000000\" stroke=\"#000000\" points=\"464.7868,-1011.7171 455.9566,-1017.5718 466.5106,-1018.5016 464.7868,-1011.7171\"/>\n" +
           "</g>\n" +
           "<!-- 7&#45;&gt;5 -->\n" +
-          "<g id=\"edge6\" class=\"edge\">\n" +
+          "<g id=\"edge7\" class=\"edge\">\n" +
           "<title>7&#45;&gt;5</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,2\" d=\"M1428.4921,-663.1446C1480.1469,-697.4794 1526.9614,-728.5969 1563.409,-752.8235\"/>\n" +
           "<polygon fill=\"#000000\" stroke=\"#000000\" points=\"1561.7065,-755.8945 1571.9721,-758.5154 1565.5815,-750.0649 1561.7065,-755.8945\"/>\n" +
