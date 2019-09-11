@@ -253,14 +253,17 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                 umlClass = parseExpression(node.initialValue, umlClass)
                 break
             case 'ForStatement':
+                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 umlClass = parseExpression(node.conditionExpression, umlClass)
                 umlClass = parseExpression(node.loopExpression.expression, umlClass)
                 break
             case 'WhileStatement':
+                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 break
             case 'DoWhileStatement':
+                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 umlClass = parseExpression(node.condition, umlClass)
                 break
@@ -269,11 +272,15 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                 umlClass = parseExpression(node.expression, umlClass)
                 break
             case 'IfStatement':
+                // @ts-ignore type Statement can be a Block
                 if (node.trueBody && node.trueBody.statements) {
+                    // @ts-ignore
                     umlClass = addAssociations(node.trueBody.statements, umlClass)
                 }
 
+                // @ts-ignore type Statement can be a Block
                 if (node.falseBody && node.falseBody.statements) {
+                    // @ts-ignore
                     umlClass = addAssociations(node.falseBody.statements, umlClass)
                 }
 
