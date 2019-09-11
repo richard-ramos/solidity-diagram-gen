@@ -39,8 +39,9 @@ export interface Attribute {
 
 export interface Operator extends Attribute {
     stereotype?: OperatorStereotype,
-    parameters?: Required<Parameter>[],
+    parameters?: Parameter[],
     returnParameters?: Parameter[],
+    isPayable?: boolean,
 }
 
 export enum ReferenceType {

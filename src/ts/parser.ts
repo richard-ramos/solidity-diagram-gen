@@ -2,7 +2,6 @@ import {
     ASTNode,
     ContractDefinition,
     Expression,
-    ParameterList,
     TypeName,
     VariableDeclaration
 } from 'solidity-parser-antlr'
@@ -88,7 +87,6 @@ function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                     umlClass.operators.push({
                         name: 'constructor',
                         stereotype: OperatorStereotype.None,
-                        // @ts-ignore
                         parameters: parseParameters(subNode.parameters),
                     })
                 }
@@ -97,7 +95,6 @@ function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                     umlClass.operators.push({
                         name: '',
                         stereotype: OperatorStereotype.Fallback,
-                        // @ts-ignore
                         parameters: parseParameters(subNode.parameters),
                         isPayable: parsePayable(subNode.stateMutability),
                     })
@@ -116,16 +113,15 @@ function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                         visibility: parseVisibility(subNode.visibility),
                         name: subNode.name,
                         stereotype,
-                        // @ts-ignore
                         parameters: parseParameters(subNode.parameters),
                         returnParameters: parseParameters(subNode.returnParameters),
                     })
                 }
 
                 // Recursively parse function parameters for associations
-                umlClass = addAssociations(subNode.parameters.parameters, umlClass)
+                umlClass = addAssociations(subNode.parameters, umlClass)
                 if (subNode.returnParameters) {
-                    umlClass = addAssociations(subNode.returnParameters.parameters, umlClass)
+                    umlClass = addAssociations(subNode.returnParameters, umlClass)
                 }
 
                 // If no body to the function, it must be either an Interface or Abstract
@@ -150,10 +146,10 @@ function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                     parameters: parseParameters(subNode.parameters),
                 })
 
-                // @ts-ignore
+                // @ts-ignore ModifierDefinition type is missing body
                 if (subNode.body && subNode.body.statements) {
                     // Recursively parse modifier statements for associations
-                    // @ts-ignore
+                    // @ts-ignore ModifierDefinition type is missing body
                     umlClass = addAssociations(subNode.body.statements, umlClass)
                 }
                 break
@@ -162,12 +158,11 @@ function parseContractDefinition(umlClass: UmlClass, node: ContractDefinition): 
                 umlClass.operators.push({
                     stereotype: OperatorStereotype.Event,
                     name: subNode.name,
-                    // @ts-ignore
                     parameters: parseParameters(subNode.parameters),
                 })
 
                 // Recursively parse event parameters for associations
-                umlClass = addAssociations(subNode.parameters.parameters, umlClass)
+                umlClass = addAssociations(subNode.parameters, umlClass)
 
                 break
 
@@ -223,7 +218,6 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
         // Recursively parse sub nodes that can has variable declarations
         switch (node.type) {
             case 'VariableDeclaration':
-            case 'Parameter':
                 if (!node.typeName) {
                     break
                 }
@@ -259,17 +253,14 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                 umlClass = parseExpression(node.initialValue, umlClass)
                 break
             case 'ForStatement':
-                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 umlClass = parseExpression(node.conditionExpression, umlClass)
                 umlClass = parseExpression(node.loopExpression.expression, umlClass)
                 break
             case 'WhileStatement':
-                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 break
             case 'DoWhileStatement':
-                // @ts-ignore type of body is a Block and not a Statement
                 umlClass = addAssociations(node.body.statements, umlClass)
                 umlClass = parseExpression(node.condition, umlClass)
                 break
@@ -278,15 +269,11 @@ function addAssociations(nodes: ASTNode[], umlClass: UmlClass): UmlClass {
                 umlClass = parseExpression(node.expression, umlClass)
                 break
             case 'IfStatement':
-                // @ts-ignore type Statement can be a Block
                 if (node.trueBody && node.trueBody.statements) {
-                    // @ts-ignore
                     umlClass = addAssociations(node.trueBody.statements, umlClass)
                 }
 
-                // @ts-ignore type Statement can be a Block
                 if (node.falseBody && node.falseBody.statements) {
-                    // @ts-ignore
                     umlClass = addAssociations(node.falseBody.statements, umlClass)
                 }
 
@@ -399,15 +386,15 @@ function parseTypeName(typeName: TypeName): string {
     }
 }
 
-function parseParameters(params: ParameterList): Parameter[] {
+function parseParameters(params: VariableDeclaration[]): Parameter[] {
 
-    if (!params || !params.parameters) {
+    if (!params || !params) {
         return []
     }
 
     let parameters: Parameter[] = []
 
-    for (const param of params.parameters) {
+    for (const param of params) {
         parameters.push({
             name: param.name,
             type: parseTypeName(param.typeName),
