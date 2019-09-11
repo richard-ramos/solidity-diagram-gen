@@ -20,7 +20,12 @@ npm link sol2uml --only=production
 
 To upgrade run
 ```bash
-npm upgrade sol2uml
+npm upgrade sol2uml -g
+```
+
+To see which version you are using
+```bash
+npm ls sol2uml
 ```
 
 # Usage
