@@ -12,6 +12,13 @@ This uses the verified Solidity code loaded to Etherscan https://etherscan.io/ad
 ![Open Zeppelin ERC20](./OpenZeppelinERC20.svg)
 Generated from version [2.3.0 contracts/token/ERC20](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.3.0/contracts/token/ERC20)
 
+## Open Zeppelin Base Contract
+![Open Zeppelin Base Contract](./OzToken.svg)
+Generated from version [2.3.0 contracts](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.3.0/contracts) with
+```base
+sol2uml -b OzToken
+```
+
 ## Open Zeppelin All
 ![Open Zeppelin ERC20](./OpenZeppelinAll.svg)
 Generated from version [2.3.0 contracts](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/v2.3.0/contracts)

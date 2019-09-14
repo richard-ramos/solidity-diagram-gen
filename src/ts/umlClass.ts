@@ -68,7 +68,7 @@ export interface ClassProperties {
 
 export class UmlClass implements ClassProperties {
 
-    static idCounter = 1
+    static idCounter = 0
 
     id: number
     name: string

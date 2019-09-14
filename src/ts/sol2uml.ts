@@ -2,6 +2,7 @@
 
 import { EtherscanParser } from './etherscanParser'
 import { parseUmlClassesFromFiles } from './fileParser'
+import { classesConnectedToBaseContracts } from './contractFilter'
 import { UmlClass} from './umlClass'
 
 const debug = require('debug')('sol2uml')
@@ -15,13 +16,14 @@ Generates UML diagrams from Solidity source code.
 If no file, folder or address is passes as the first argument, the working folder is used.
 When a folder is used, all *.sol files are found in that folder and all sub folders.
 If an Ethereum address with a 0x prefix is passed, the verified source code from Etherscan will be used.`)
-  .option('-v, --verbose', 'run with debugging statements')
+  .option('-b, --baseContractNames <value>', 'only output contracts connected to these comma separated base contract names')
   .option('-f, --outputFormat <value>', 'output file format: svg, png, dot or all', 'svg')
   .option('-o, --outputFileName <value>', 'output file name')
   .option('-d, --depthLimit <depth>', 'number of sub folders that will be recursively searched for Solidity files. Default -1 is unlimited', -1)
   .option('-n, --network <network>', 'mainnet, ropsten, kovan, rinkeby or goerli', 'mainnet')
   .option('-k, --etherscanApiKey <key>', 'Etherscan API Key')
   .option('-c, --clusterFolders', 'cluster contracts into source folders')
+  .option('-v, --verbose', 'run with debugging statements')
   .parse(process.argv)
 
 if (program.verbose) {
@@ -60,7 +62,13 @@ async function sol2uml() {
     umlClasses = await parseUmlClassesFromFiles([fileFolderAddress], depthLimit)
   }
 
-  generateFilesFromUmlClasses(umlClasses, fileFolderAddress, program.outputFormat, program.outputFileName, program.clusterFolders).then(() => {
+  let filteredUmlClasses = umlClasses
+  if (program.baseContractNames) {
+    const baseContractNames = program.baseContractNames.split(',')
+    filteredUmlClasses = classesConnectedToBaseContracts(umlClasses, baseContractNames)
+  }
+
+  generateFilesFromUmlClasses(filteredUmlClasses, fileFolderAddress, program.outputFormat, program.outputFileName, program.clusterFolders).then(() => {
     debug(`Finished`)
   })
 }
