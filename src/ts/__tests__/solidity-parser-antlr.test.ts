@@ -1,6 +1,6 @@
 import parser from 'solidity-parser-antlr'
 
-describe('Solidity Parser', () => {
+describe.skip('Solidity Parser', () => {
   test('pragma ^0.5', () => {
     expect.assertions(1)
     try {
