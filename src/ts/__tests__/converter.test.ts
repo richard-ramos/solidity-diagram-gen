@@ -49,9 +49,9 @@ describe('Converter', () => {
           "<g id=\"graph0\" class=\"graph\" transform=\"scale(1 1) rotate(0) translate(4 1192.6)\">\n" +
           "<title>UmlClassDiagram</title>\n" +
           "<polygon fill=\"#ffffff\" stroke=\"transparent\" points=\"-4,4 -4,-1192.6 1779.9732,-1192.6 1779.9732,4 -4,4\"/>\n" +
-          "<!-- 1 -->\n" +
+          "<!-- 0 -->\n" +
           "<g id=\"node1\" class=\"node\">\n" +
-          "<title>1</title>\n" +
+          "<title>0</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"533.0064,-733.5 533.0064,-875.1 726.6986,-875.1 726.6986,-733.5 533.0064,-733.5\"/>\n" +
           "<text text-anchor=\"middle\" x=\"629.8525\" y=\"-858.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">SafeMath</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"533.0064,-850.3 726.6986,-850.3 \"/>\n" +
@@ -63,9 +63,9 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"541.0064\" y=\"-758.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;safeAdd(a: uint, b: uint): uint</text>\n" +
           "<text text-anchor=\"start\" x=\"541.0064\" y=\"-741.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;assert(assertion: bool)</text>\n" +
           "</g>\n" +
-          "<!-- 2 -->\n" +
+          "<!-- 1 -->\n" +
           "<g id=\"node2\" class=\"node\">\n" +
-          "<title>2</title>\n" +
+          "<title>1</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"0,-945.7 0,-1188.1 455.705,-1188.1 455.705,-945.7 0,-945.7\"/>\n" +
           "<text text-anchor=\"middle\" x=\"227.8525\" y=\"-1171.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">Token</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"0,-1163.3 455.705,-1163.3 \"/>\n" +
@@ -83,9 +83,9 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"8\" y=\"-970.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;approve(_spender: address, _value: uint256): (success: bool)</text>\n" +
           "<text text-anchor=\"start\" x=\"8\" y=\"-953.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;allowance(_owner: address, _spender: address): (remaining: uint256)</text>\n" +
           "</g>\n" +
-          "<!-- 3 -->\n" +
+          "<!-- 2 -->\n" +
           "<g id=\"node3\" class=\"node\">\n" +
-          "<title>3</title>\n" +
+          "<title>2</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"0,-699.9 0,-908.7 455.705,-908.7 455.705,-699.9 0,-699.9\"/>\n" +
           "<text text-anchor=\"middle\" x=\"227.8525\" y=\"-892.1\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">StandardToken</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"0,-883.9 455.705,-883.9 \"/>\n" +
@@ -101,15 +101,15 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"8\" y=\"-724.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;approve(_spender: address, _value: uint256): (success: bool)</text>\n" +
           "<text text-anchor=\"start\" x=\"8\" y=\"-708.1\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;allowance(_owner: address, _spender: address): (remaining: uint256)</text>\n" +
           "</g>\n" +
-          "<!-- 3&#45;&gt;2 -->\n" +
+          "<!-- 2&#45;&gt;1 -->\n" +
           "<g id=\"edge1\" class=\"edge\">\n" +
-          "<title>3&#45;&gt;2</title>\n" +
+          "<title>2&#45;&gt;1</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" d=\"M227.8525,-908.841C227.8525,-910.9999 227.8525,-913.1688 227.8525,-915.3453\"/>\n" +
           "<polygon fill=\"none\" stroke=\"#000000\" points=\"217.3526,-915.3949 227.8525,-945.3949 238.3526,-915.395 217.3526,-915.3949\"/>\n" +
           "</g>\n" +
-          "<!-- 4 -->\n" +
+          "<!-- 3 -->\n" +
           "<g id=\"node4\" class=\"node\">\n" +
-          "<title>4</title>\n" +
+          "<title>3</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"102.0509,-260.9 102.0509,-402.5 353.6541,-402.5 353.6541,-260.9 102.0509,-260.9\"/>\n" +
           "<text text-anchor=\"middle\" x=\"227.8525\" y=\"-385.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">ReserveToken</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"102.0509,-377.7 353.6541,-377.7 \"/>\n" +
@@ -121,21 +121,21 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"110.0509\" y=\"-285.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;create(account: address, amount: uint)</text>\n" +
           "<text text-anchor=\"start\" x=\"110.0509\" y=\"-269.1\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;destroy(account: address, amount: uint)</text>\n" +
           "</g>\n" +
-          "<!-- 4&#45;&gt;1 -->\n" +
+          "<!-- 3&#45;&gt;0 -->\n" +
           "<g id=\"edge3\" class=\"edge\">\n" +
-          "<title>4&#45;&gt;1</title>\n" +
+          "<title>3&#45;&gt;0</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" d=\"M239.1102,-402.5002C254.5232,-477.041 289.1827,-593.1299 362.8525,-663.4 397.6391,-696.5813 421.623,-678.3685 464.8525,-699.4 478.7988,-706.185 493.0228,-713.8895 506.9811,-721.9691\"/>\n" +
           "<polygon fill=\"none\" stroke=\"#000000\" points=\"501.8104,-731.1119 532.933,-737.5646 512.6272,-713.112 501.8104,-731.1119\"/>\n" +
           "</g>\n" +
-          "<!-- 4&#45;&gt;3 -->\n" +
+          "<!-- 3&#45;&gt;2 -->\n" +
           "<g id=\"edge2\" class=\"edge\">\n" +
-          "<title>4&#45;&gt;3</title>\n" +
+          "<title>3&#45;&gt;2</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" d=\"M227.8525,-402.7087C227.8525,-473.1658 227.8525,-582.902 227.8525,-669.87\"/>\n" +
           "<polygon fill=\"none\" stroke=\"#000000\" points=\"217.3526,-669.8761 227.8525,-699.8762 238.3526,-669.8762 217.3526,-669.8761\"/>\n" +
           "</g>\n" +
-          "<!-- 5 -->\n" +
+          "<!-- 4 -->\n" +
           "<g id=\"node5\" class=\"node\">\n" +
-          "<title>5</title>\n" +
+          "<title>4</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"1532.5579,-758.7 1532.5579,-849.9 1749.1471,-849.9 1749.1471,-758.7 1532.5579,-758.7\"/>\n" +
           "<text text-anchor=\"middle\" x=\"1640.8525\" y=\"-833.3\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">AccountLevels</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"1532.5579,-825.1 1749.1471,-825.1 \"/>\n" +
@@ -144,9 +144,9 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"1540.5579\" y=\"-783.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">Public:</text>\n" +
           "<text text-anchor=\"start\" x=\"1540.5579\" y=\"-766.9\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;accountLevel(user: address): uint</text>\n" +
           "</g>\n" +
-          "<!-- 6 -->\n" +
+          "<!-- 5 -->\n" +
           "<g id=\"node6\" class=\"node\">\n" +
-          "<title>6</title>\n" +
+          "<title>5</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"1505.7318,-269.3 1505.7318,-394.1 1775.9732,-394.1 1775.9732,-269.3 1505.7318,-269.3\"/>\n" +
           "<text text-anchor=\"middle\" x=\"1640.8525\" y=\"-377.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">AccountLevelsTest</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"1505.7318,-369.3 1775.9732,-369.3 \"/>\n" +
@@ -157,15 +157,15 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"1513.7318\" y=\"-294.3\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;setAccountLevel(user: address, level: uint)</text>\n" +
           "<text text-anchor=\"start\" x=\"1513.7318\" y=\"-277.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;accountLevel(user: address): uint</text>\n" +
           "</g>\n" +
-          "<!-- 6&#45;&gt;5 -->\n" +
+          "<!-- 5&#45;&gt;4 -->\n" +
           "<g id=\"edge4\" class=\"edge\">\n" +
-          "<title>6&#45;&gt;5</title>\n" +
+          "<title>5&#45;&gt;4</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" d=\"M1640.8525,-394.4576C1640.8525,-480.724 1640.8525,-635.7633 1640.8525,-728.4318\"/>\n" +
           "<polygon fill=\"none\" stroke=\"#000000\" points=\"1630.3526,-728.6724 1640.8525,-758.6725 1651.3526,-728.6725 1630.3526,-728.6724\"/>\n" +
           "</g>\n" +
-          "<!-- 7 -->\n" +
+          "<!-- 6 -->\n" +
           "<g id=\"node7\" class=\"node\">\n" +
-          "<title>7</title>\n" +
+          "<title>6</title>\n" +
           "<polygon fill=\"#f2f2f2\" stroke=\"#000000\" points=\"371.8856,-.5 371.8856,-662.9 1487.8194,-662.9 1487.8194,-.5 371.8856,-.5\"/>\n" +
           "<text text-anchor=\"middle\" x=\"929.8525\" y=\"-646.3\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\">EtherDelta</text>\n" +
           "<polyline fill=\"none\" stroke=\"#000000\" points=\"371.8856,-638.1 1487.8194,-638.1 \"/>\n" +
@@ -208,21 +208,21 @@ describe('Converter', () => {
           "<text text-anchor=\"start\" x=\"379.8856\" y=\"-25.5\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;amountFilled(tokenGet: address, amountGet: uint, tokenGive: address, amountGive: uint, expires: uint, nonce: uint, user: address, v: uint8, r: bytes32, s: bytes32): uint</text>\n" +
           "<text text-anchor=\"start\" x=\"379.8856\" y=\"-8.7\" font-family=\"Times,serif\" font-size=\"14.00\" fill=\"#000000\"> &#160;&#160;&#160;changeFeeRebate(feeRebate_: uint)</text>\n" +
           "</g>\n" +
-          "<!-- 7&#45;&gt;1 -->\n" +
+          "<!-- 6&#45;&gt;0 -->\n" +
           "<g id=\"edge5\" class=\"edge\">\n" +
-          "<title>7&#45;&gt;1</title>\n" +
+          "<title>6&#45;&gt;0</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" d=\"M719.456,-663.1446C709.5332,-678.7763 700.0337,-693.7412 691.1776,-707.6926\"/>\n" +
           "<polygon fill=\"none\" stroke=\"#000000\" points=\"682.2107,-702.2262 674.9976,-733.1814 699.9403,-713.4807 682.2107,-702.2262\"/>\n" +
           "</g>\n" +
-          "<!-- 7&#45;&gt;2 -->\n" +
+          "<!-- 6&#45;&gt;1 -->\n" +
           "<g id=\"edge6\" class=\"edge\">\n" +
-          "<title>7&#45;&gt;2</title>\n" +
+          "<title>6&#45;&gt;1</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,2\" d=\"M876.2057,-663.2166C847.5088,-752.8093 803.4615,-843.1341 735.8525,-909.2 695.4607,-948.6699 577.7051,-986.4223 465.7305,-1015.0886\"/>\n" +
           "<polygon fill=\"#000000\" stroke=\"#000000\" points=\"464.7868,-1011.7171 455.9566,-1017.5718 466.5106,-1018.5016 464.7868,-1011.7171\"/>\n" +
           "</g>\n" +
-          "<!-- 7&#45;&gt;5 -->\n" +
+          "<!-- 6&#45;&gt;4 -->\n" +
           "<g id=\"edge7\" class=\"edge\">\n" +
-          "<title>7&#45;&gt;5</title>\n" +
+          "<title>6&#45;&gt;4</title>\n" +
           "<path fill=\"none\" stroke=\"#000000\" stroke-dasharray=\"5,2\" d=\"M1428.4921,-663.1446C1480.1469,-697.4794 1526.9614,-728.5969 1563.409,-752.8235\"/>\n" +
           "<polygon fill=\"#000000\" stroke=\"#000000\" points=\"1561.7065,-755.8945 1571.9721,-758.5154 1565.5815,-750.0649 1561.7065,-755.8945\"/>\n" +
           "</g>\n" +
