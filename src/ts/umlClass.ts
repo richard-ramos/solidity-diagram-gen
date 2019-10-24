@@ -25,8 +25,7 @@ export enum OperatorStereotype {
 }
 
 export interface Parameter {
-    // name is not required in return parameters
-    // but is required in operator parameters
+    // name is not required in return parameters or operator parameters
     name?: string,
     type: string,
 }
@@ -284,7 +283,7 @@ export class UmlClass implements ClassProperties {
             dotString += UmlClass.dotParameters(operator.parameters)
 
             if (operator.returnParameters && operator.returnParameters.length > 0 ) {
-                dotString += ': ' + UmlClass.dotParameters(operator.returnParameters)
+                dotString += ': ' + UmlClass.dotParameters(operator.returnParameters, true)
             }
 
             dotString += '\\l'
@@ -322,11 +321,16 @@ export class UmlClass implements ClassProperties {
         return dotString + ' '
     }
 
-    static dotParameters(parameters: Parameter[]): string {
+    static dotParameters(parameters: Parameter[], returnParams: boolean = false): string {
 
         if (parameters.length == 1 &&
             !parameters[0].name) {
-            return parameters[0].type
+            if (returnParams) {
+                return parameters[0].type
+            }
+            else {
+                return `(${parameters[0].type})`
+            }
         }
 
         let dotString = '('

@@ -84,7 +84,7 @@ export declare class UmlClass implements ClassProperties {
     dotOperatoreVisibilities(): string;
     dotOperators(vizGroup: string, operators: Operator[]): string;
     dotOperatorStereotype(operatorStereotype: OperatorStereotype): string;
-    static dotParameters(parameters: Parameter[]): string;
+    static dotParameters(parameters: Parameter[], returnParams?: boolean): string;
     dotStructs(): string;
     dotEnums(): string;
 }
