@@ -78,6 +78,15 @@ contract SomeImpl is SomeInterface {
         return somePublicNumber;
     }
 
+    function unnamedFunctionParam(uint256) external {
+    }
+
+    function unnamedFunctionParams(uint256, string, bool) external {
+    }
+
+    function unnamedFunctionParamsMIxed(uint256, string, string testing, bool) external {
+    }
+
     function returnsTuple() public pure returns (bool, string memory) {
         return (false, "testing");
     }
