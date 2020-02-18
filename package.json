@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
-    "commander": "^3.0.1",
+    "commander": "^3.0.2",
     "debug": "^4.1.1",
     "js-graph-algorithms": "^1.0.18",
     "klaw": "^2.1.1",
@@ -27,13 +27,13 @@
     "viz.js": "^1.8.2"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^25.1.2",
     "@types/klaw": "^3.0.0",
     "@types/verror": "^1.10.3",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "openzeppelin-solidity": "2.3.0",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3"
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.7.5"
   },
   "files": [
     "lib/*.js",

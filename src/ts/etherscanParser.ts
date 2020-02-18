@@ -80,8 +80,8 @@ export class EtherscanParser {
                 },
             })
 
-            if (!response.data || !Array.isArray(response.data.result)) {
-                 throw new Error(`Failed to ${description}. No result array in HTTP data: ${JSON.stringify(response.data)}`)
+            if (!Array.isArray(response?.data?.result)) {
+                 throw new Error(`Failed to ${description}. No result array in HTTP data: ${JSON.stringify(response?.data)}`)
             }
 
             return response.data.result.map((sc: any) => {
@@ -94,7 +94,7 @@ export class EtherscanParser {
             if (!err.response) {
                 throw new Error(`Failed to ${description}. No HTTP response.`)
             }
-            throw new VError(`Failed to ${description}. HTTP status code ${err.response.status}, status text: ${err.response.statusText}`)
+            throw new VError(`Failed to ${description}. HTTP status code ${err.response?.status}, status text: ${err.response?.statusText}`)
         }
     }
 }

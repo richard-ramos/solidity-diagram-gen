@@ -78,7 +78,7 @@ export function getSolidityFilesFromFolderOrFile(folderOrFilePath: string, depth
             }
         } catch(err) {
             let error: Error
-            if (err && err.code === 'ENOENT') {
+            if (err?.code === 'ENOENT') {
                 error = Error(`No such file or folder ${folderOrFilePath}. Make sure you pass in the root directory of the contracts`)
             }
             else {

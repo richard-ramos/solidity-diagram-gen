@@ -282,7 +282,7 @@ export class UmlClass implements ClassProperties {
 
             dotString += UmlClass.dotParameters(operator.parameters)
 
-            if (operator.returnParameters && operator.returnParameters.length > 0 ) {
+            if (operator.returnParameters?.length > 0 ) {
                 dotString += ': ' + UmlClass.dotParameters(operator.returnParameters, true)
             }
 
