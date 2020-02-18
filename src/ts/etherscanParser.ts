@@ -1,4 +1,4 @@
-import request from 'request'
+import axios from 'axios';
 import { ASTNode, parse } from 'solidity-parser-antlr'
 import { VError} from 'verror'
 
@@ -66,43 +66,35 @@ export class EtherscanParser {
      * Calls Etherscan to get the verified source code for the specified contract address
      * @param contractAddress Ethereum contract address with a 0x prefix
      */
-    getSourceCode(contractAddress: string): Promise<string[]> {
+    async getSourceCode(contractAddress: string): Promise<string[]> {
 
         const description =  `get verified source code for address ${contractAddress} from Etherscan API.`
 
-        return new Promise<string[]>((resolve, reject) => {
-            request.get(this.url, {
-                qs: {
+        try {
+            const response: any = await axios.get(this.url, {
+                params: {
                     module: 'contract',
                     action: 'getsourcecode',
                     address: contractAddress,
-                    apikey: this.apikey
+                    apikey: this.apikey,
                 },
-                json: true,
-            }, (err, res, body) => {
-                if (err) {
-                    if (res) {
-                        return reject(new VError(err, `Failed to ${description}. HTTP code ${res.statusCode} and message: ${res.statusMessage}`))
-                    }
-                    return reject(new VError(err, `Failed to ${description}.`))
-                }
-
-                if (!body) {
-                    return reject(new Error(`Failed to ${description}. Empty body in HTTP response.`))
-                }
-                if (!body.result || !Array.isArray(body.result)) {
-                    return reject(new Error(`Failed to ${description}. No result array in HTTP body returned. Body returned: ${JSON.stringify(body)}`))
-                }
-
-                const sourceCodes = body.result.map((sc: any) => {
-                    if (!sc.SourceCode) {
-                        reject(new Error(`Failed to ${description}. Most likely the contract has not been verified on Etherscan.`))
-                    }
-                    return sc.SourceCode
-                })
-
-                resolve(sourceCodes)
             })
-        })
+
+            if (!response.data || !Array.isArray(response.data.result)) {
+                 throw new Error(`Failed to ${description}. No result array in HTTP data: ${JSON.stringify(response.data)}`)
+            }
+
+            return response.data.result.map((sc: any) => {
+                if (!sc.SourceCode) {
+                    throw new Error(`Failed to ${description}. Most likely the contract has not been verified on Etherscan.`)
+                }
+                return sc.SourceCode
+            })
+        } catch (err) {
+            if (!err.response) {
+                throw new Error(`Failed to ${description}. No HTTP response.`)
+            }
+            throw new VError(`Failed to ${description}. HTTP status code ${err.response.status}, status text: ${err.response.statusText}`)
+        }
     }
 }

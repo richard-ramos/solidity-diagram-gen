@@ -1,6 +1,6 @@
 {
   "name": "sol2uml",
-  "version": "1.1.12",
+  "version": "1.1.13",
   "description": "Unified Modeling Language (UML) class diagram generator for Solidity contracts",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -8,7 +8,7 @@
     "buildSol": "cd ./src/contracts && solc *",
     "build": "tsc --build ./tsconfig.json",
     "clean": "tsc --build --clean ./tsconfig.json",
-    "test": "jest"
+    "test": "npx jest"
   },
   "preferGlobal": true,
   "contributors": [
@@ -16,11 +16,11 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "commander": "^3.0.1",
     "debug": "^4.1.1",
     "js-graph-algorithms": "^1.0.18",
     "klaw": "^2.1.1",
-    "request": "^2.88.0",
     "solidity-parser-antlr": "0.4.11",
     "svg-to-png": "^4.0.0",
     "verror": "^1.10.0",
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/klaw": "^3.0.0",
-    "@types/request": "^2.48.3",
     "@types/verror": "^1.10.3",
     "jest": "^24.8.0",
     "openzeppelin-solidity": "2.3.0",
