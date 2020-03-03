@@ -14,6 +14,7 @@
   "contributors": [
     "Nick Addison"
   ],
+  "repository": "github:naddison36/sol2uml",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
