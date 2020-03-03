@@ -5,6 +5,7 @@ import { parseUmlClassesFromFiles } from './fileParser'
 import { classesConnectedToBaseContracts } from './contractFilter'
 import { UmlClass} from './umlClass'
 
+const debugControl = require('debug')
 const debug = require('debug')('sol2uml')
 
 const program = require('commander')
@@ -27,7 +28,7 @@ If an Ethereum address with a 0x prefix is passed, the verified source code from
   .parse(process.argv)
 
 if (program.verbose) {
-  process.env.DEBUG = 'sol2uml'
+  debugControl.enable('sol2uml')
 }
 
 // This function needs to be loaded after the DEBUG env variable has been set
