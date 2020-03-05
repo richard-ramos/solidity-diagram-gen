@@ -177,7 +177,7 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
             someInt = 22;
 
             NewConcrete newConcrete = new NewConcrete();
-            address newAddressConcrete = new NewAddressConcrete();
+            NewAddressConcrete newAddressConcrete = new NewAddressConcrete();
 
             uint256 counter = 0;
             for (uint i = 0; i < someIntArray.length; i++) {
@@ -218,5 +218,12 @@ contract Associations is ContractInterface, ContractAbstract, ContractConcrete {
         BigInt.bigint memory y = BigInt.fromUint(uint(-1));
         BigInt.bigint memory z = x.add(y);
         assert(z.limb(1) > 0);
+    }
+
+    function usingStructs(
+        SomeStruct memory someStructParam,
+        SomeStruct[] memory someStructArray
+    ) internal returns (SomeStruct[] memory) {
+        return someStructArray;
     }
 }

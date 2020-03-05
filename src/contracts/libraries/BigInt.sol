@@ -1,3 +1,5 @@
+pragma solidity ^0.5.10;
+
 library BigInt {
     struct bigint {
         uint[] limbs;
