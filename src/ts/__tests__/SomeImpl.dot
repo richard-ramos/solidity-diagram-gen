@@ -1,0 +1,18 @@
+digraph UmlClassDiagram {
+rankdir=BT
+color=black
+arrowhead=open
+node [shape=record, style=filled, fillcolor=gray95]
+subgraph  graph_0 {
+label="src/contracts/Libraries"
+1 [label="{\<\<Library\>\>\nBigInt| | Private:\l\ \ \ \ max(a: uint, b: uint): uint\lInternal:\l\ \ \ \ fromUint(x: uint): (r: bigint)\l\ \ \ \ add(_a: bigint, _b: bigint): (r: bigint)\l\ \ \ \ limb(_a: bigint, _limb: uint): uint\l}"]
+"1struct0" [label="{\<\<struct\>\>\nbigint|limbs: uint[]\l}"]
+"1struct0" -> 1 [arrowhead=diamond, weight=3]
+2 [label="{LibraryTest| Public:\l\ \ \ someLibrary: Set.Data\l| Public:\l\ \ \ \ someBigIntFunction(): ()\l}"]
+3 [label="{\<\<Library\>\>\nSet| | Public:\l\ \ \ \ insert(self: Data, value: uint): bool\l\ \ \ \ remove(self: Data, value: uint): bool\l\ \ \ \ contains(self: Data, value: uint): bool\l}"]
+"3struct0" [label="{\<\<struct\>\>\nData|flags: mapping\(uint=\>bool\)\l}"]
+"3struct0" -> 3 [arrowhead=diamond, weight=3]
+}
+2 -> 3 []
+2 -> 1 [style=dashed, ]
+}
